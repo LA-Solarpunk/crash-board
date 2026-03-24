@@ -1,0 +1,282 @@
+[
+  {
+    "time": "07:55:08",
+    "seconds": 28508,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "08:25:08",
+    "seconds": 30308,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "08:55:08",
+    "seconds": 32108,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "09:25:08",
+    "seconds": 33908,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "09:54:08",
+    "seconds": 35648,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "10:24:08",
+    "seconds": 37448,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "10:53:08",
+    "seconds": 39188,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "11:23:27",
+    "seconds": 41007,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "11:52:27",
+    "seconds": 42747,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "12:22:27",
+    "seconds": 44547,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "12:52:27",
+    "seconds": 46347,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "13:22:27",
+    "seconds": 48147,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "13:52:27",
+    "seconds": 49947,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "14:21:27",
+    "seconds": 51687,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "14:51:27",
+    "seconds": 53487,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "15:21:27",
+    "seconds": 55287,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "15:40:19",
+    "seconds": 56419,
+    "direction": 0,
+    "dest": "Bristol/Centinela",
+    "route": "3"
+  },
+  {
+    "time": "15:51:03",
+    "seconds": 57063,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "16:10:19",
+    "seconds": 58219,
+    "direction": 0,
+    "dest": "Bristol/Centinela",
+    "route": "3"
+  },
+  {
+    "time": "16:21:03",
+    "seconds": 58863,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "16:40:19",
+    "seconds": 60019,
+    "direction": 0,
+    "dest": "Bristol/Centinela",
+    "route": "3"
+  },
+  {
+    "time": "16:52:03",
+    "seconds": 60723,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "17:10:19",
+    "seconds": 61819,
+    "direction": 0,
+    "dest": "Bristol/Centinela",
+    "route": "3"
+  },
+  {
+    "time": "17:22:03",
+    "seconds": 62523,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "17:40:19",
+    "seconds": 63619,
+    "direction": 0,
+    "dest": "Bristol/Centinela",
+    "route": "3"
+  },
+  {
+    "time": "17:52:03",
+    "seconds": 64323,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "18:10:19",
+    "seconds": 65419,
+    "direction": 0,
+    "dest": "Bristol/Centinela",
+    "route": "3"
+  },
+  {
+    "time": "18:24:43",
+    "seconds": 66283,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "18:39:42",
+    "seconds": 67182,
+    "direction": 0,
+    "dest": "Bristol/Centinela",
+    "route": "3"
+  },
+  {
+    "time": "18:54:43",
+    "seconds": 68083,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "19:08:42",
+    "seconds": 68922,
+    "direction": 0,
+    "dest": "Bristol/Centinela",
+    "route": "3"
+  },
+  {
+    "time": "19:25:22",
+    "seconds": 69922,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "19:38:06",
+    "seconds": 70686,
+    "direction": 0,
+    "dest": "Bristol/Centinela",
+    "route": "3"
+  },
+  {
+    "time": "20:08:06",
+    "seconds": 72486,
+    "direction": 0,
+    "dest": "Bristol/Centinela",
+    "route": "3"
+  },
+  {
+    "time": "20:09:43",
+    "seconds": 72583,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "20:39:43",
+    "seconds": 74383,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "20:52:06",
+    "seconds": 75126,
+    "direction": 0,
+    "dest": "Bristol/Centinela",
+    "route": "3"
+  },
+  {
+    "time": "21:09:43",
+    "seconds": 76183,
+    "direction": 1,
+    "dest": "Century City",
+    "route": "3"
+  },
+  {
+    "time": "21:21:29",
+    "seconds": 76889,
+    "direction": 0,
+    "dest": "Bristol/Centinela",
+    "route": "3"
+  },
+  {
+    "time": "21:51:29",
+    "seconds": 78689,
+    "direction": 0,
+    "dest": "Bristol/Centinela",
+    "route": "3"
+  }
+]

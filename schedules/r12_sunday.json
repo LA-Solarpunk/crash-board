@@ -1,0 +1,282 @@
+[
+  {
+    "time": "06:31:00",
+    "seconds": 23460,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "06:55:00",
+    "seconds": 24900,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "07:22:00",
+    "seconds": 26520,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "07:46:00",
+    "seconds": 27960,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "08:11:00",
+    "seconds": 29460,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "08:36:00",
+    "seconds": 30960,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "09:03:00",
+    "seconds": 32580,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "09:26:00",
+    "seconds": 33960,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "09:53:00",
+    "seconds": 35580,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "10:16:00",
+    "seconds": 36960,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "10:37:00",
+    "seconds": 38220,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "10:58:00",
+    "seconds": 39480,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "11:19:00",
+    "seconds": 40740,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "11:40:00",
+    "seconds": 42000,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "12:00:00",
+    "seconds": 43200,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "12:21:00",
+    "seconds": 44460,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "12:42:00",
+    "seconds": 45720,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "13:03:00",
+    "seconds": 46980,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "13:24:00",
+    "seconds": 48240,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "13:45:00",
+    "seconds": 49500,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "14:06:00",
+    "seconds": 50760,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "14:27:00",
+    "seconds": 52020,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "14:48:00",
+    "seconds": 53280,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "15:09:00",
+    "seconds": 54540,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "15:30:00",
+    "seconds": 55800,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "15:51:00",
+    "seconds": 57060,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "16:12:00",
+    "seconds": 58320,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "16:33:00",
+    "seconds": 59580,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "16:54:00",
+    "seconds": 60840,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "17:15:00",
+    "seconds": 62100,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "17:36:00",
+    "seconds": 63360,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "17:57:00",
+    "seconds": 64620,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "18:19:00",
+    "seconds": 65940,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "18:38:00",
+    "seconds": 67080,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "19:06:00",
+    "seconds": 68760,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "19:36:00",
+    "seconds": 70560,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "20:07:00",
+    "seconds": 72420,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "20:37:00",
+    "seconds": 74220,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "21:07:00",
+    "seconds": 76020,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  },
+  {
+    "time": "21:37:00",
+    "seconds": 77820,
+    "direction": 0,
+    "dest": "UCLA Rapid",
+    "route": "R12"
+  }
+]

@@ -1,0 +1,1521 @@
+[
+  {
+    "time": "06:09:00",
+    "seconds": 22140,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "06:16:00",
+    "seconds": 22560,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "06:29:00",
+    "seconds": 23340,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "06:35:00",
+    "seconds": 23700,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "06:36:00",
+    "seconds": 23760,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "06:48:00",
+    "seconds": 24480,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "06:56:00",
+    "seconds": 24960,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "06:58:00",
+    "seconds": 25080,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "07:04:00",
+    "seconds": 25440,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "07:06:00",
+    "seconds": 25560,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "07:14:00",
+    "seconds": 26040,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "07:21:00",
+    "seconds": 26460,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "07:25:00",
+    "seconds": 26700,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "07:31:00",
+    "seconds": 27060,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "07:36:00",
+    "seconds": 27360,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "07:37:00",
+    "seconds": 27420,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "07:47:00",
+    "seconds": 28020,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "07:52:00",
+    "seconds": 28320,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "07:55:00",
+    "seconds": 28500,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "08:03:00",
+    "seconds": 28980,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "08:04:00",
+    "seconds": 29040,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "08:08:00",
+    "seconds": 29280,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "08:19:00",
+    "seconds": 29940,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "08:24:00",
+    "seconds": 30240,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "08:27:00",
+    "seconds": 30420,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "08:32:00",
+    "seconds": 30720,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "08:35:00",
+    "seconds": 30900,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "08:40:00",
+    "seconds": 31200,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "08:49:00",
+    "seconds": 31740,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "08:51:00",
+    "seconds": 31860,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "08:56:00",
+    "seconds": 32160,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "08:58:00",
+    "seconds": 32280,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "09:06:00",
+    "seconds": 32760,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "09:06:00",
+    "seconds": 32760,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "09:12:00",
+    "seconds": 33120,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "09:22:00",
+    "seconds": 33720,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "09:23:00",
+    "seconds": 33780,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "09:27:00",
+    "seconds": 34020,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "09:29:00",
+    "seconds": 34140,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "09:38:00",
+    "seconds": 34680,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "09:40:00",
+    "seconds": 34800,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "09:44:00",
+    "seconds": 35040,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "09:48:00",
+    "seconds": 35280,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "09:55:00",
+    "seconds": 35700,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "09:57:00",
+    "seconds": 35820,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "10:01:00",
+    "seconds": 36060,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "10:06:00",
+    "seconds": 36360,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "10:12:00",
+    "seconds": 36720,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "10:13:00",
+    "seconds": 36780,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "10:18:00",
+    "seconds": 37080,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "10:25:00",
+    "seconds": 37500,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "10:29:00",
+    "seconds": 37740,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "10:30:00",
+    "seconds": 37800,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "10:35:00",
+    "seconds": 38100,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "10:43:00",
+    "seconds": 38580,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "10:46:00",
+    "seconds": 38760,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "10:46:00",
+    "seconds": 38760,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "10:52:00",
+    "seconds": 39120,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "11:01:00",
+    "seconds": 39660,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "11:02:00",
+    "seconds": 39720,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "11:03:00",
+    "seconds": 39780,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "11:09:00",
+    "seconds": 40140,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "11:18:00",
+    "seconds": 40680,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "11:20:00",
+    "seconds": 40800,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "11:26:00",
+    "seconds": 41160,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "11:34:00",
+    "seconds": 41640,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "11:35:00",
+    "seconds": 41700,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "11:37:00",
+    "seconds": 41820,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "11:43:00",
+    "seconds": 42180,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "11:51:00",
+    "seconds": 42660,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "11:52:00",
+    "seconds": 42720,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "11:54:00",
+    "seconds": 42840,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "11:59:00",
+    "seconds": 43140,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "12:08:00",
+    "seconds": 43680,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "12:09:00",
+    "seconds": 43740,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "12:09:00",
+    "seconds": 43740,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "12:14:00",
+    "seconds": 44040,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "12:24:00",
+    "seconds": 44640,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "12:24:00",
+    "seconds": 44640,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "12:25:00",
+    "seconds": 44700,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "12:29:00",
+    "seconds": 44940,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "12:39:00",
+    "seconds": 45540,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "12:40:00",
+    "seconds": 45600,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "12:44:00",
+    "seconds": 45840,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "12:54:00",
+    "seconds": 46440,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "12:55:00",
+    "seconds": 46500,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "12:59:00",
+    "seconds": 46740,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "13:09:00",
+    "seconds": 47340,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "13:10:00",
+    "seconds": 47400,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "13:11:00",
+    "seconds": 47460,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "13:14:00",
+    "seconds": 47640,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "13:24:00",
+    "seconds": 48240,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "13:25:00",
+    "seconds": 48300,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "13:26:00",
+    "seconds": 48360,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "13:29:00",
+    "seconds": 48540,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "13:39:00",
+    "seconds": 49140,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "13:41:00",
+    "seconds": 49260,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "13:45:00",
+    "seconds": 49500,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "13:54:00",
+    "seconds": 50040,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "13:56:00",
+    "seconds": 50160,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "14:01:00",
+    "seconds": 50460,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "14:09:00",
+    "seconds": 50940,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "14:11:00",
+    "seconds": 51060,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "14:17:00",
+    "seconds": 51420,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "14:24:00",
+    "seconds": 51840,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "14:26:00",
+    "seconds": 51960,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "14:27:00",
+    "seconds": 52020,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "14:32:00",
+    "seconds": 52320,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "14:39:00",
+    "seconds": 52740,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "14:41:00",
+    "seconds": 52860,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "14:42:00",
+    "seconds": 52920,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "14:47:00",
+    "seconds": 53220,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "14:55:00",
+    "seconds": 53700,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "14:56:00",
+    "seconds": 53760,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "14:57:00",
+    "seconds": 53820,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "14:58:00",
+    "seconds": 53880,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "15:10:00",
+    "seconds": 54600,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "15:11:00",
+    "seconds": 54660,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "15:14:00",
+    "seconds": 54840,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "15:16:00",
+    "seconds": 54960,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "15:25:00",
+    "seconds": 55500,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "15:27:00",
+    "seconds": 55620,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "15:29:00",
+    "seconds": 55740,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "15:31:00",
+    "seconds": 55860,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "15:40:00",
+    "seconds": 56400,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "15:42:00",
+    "seconds": 56520,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "15:45:00",
+    "seconds": 56700,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "15:46:00",
+    "seconds": 56760,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "15:55:00",
+    "seconds": 57300,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "15:57:00",
+    "seconds": 57420,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "16:01:00",
+    "seconds": 57660,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "16:01:00",
+    "seconds": 57660,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "16:10:00",
+    "seconds": 58200,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "16:12:00",
+    "seconds": 58320,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "16:16:00",
+    "seconds": 58560,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "16:17:00",
+    "seconds": 58620,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "16:25:00",
+    "seconds": 59100,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "16:26:00",
+    "seconds": 59160,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "16:31:00",
+    "seconds": 59460,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "16:32:00",
+    "seconds": 59520,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "16:40:00",
+    "seconds": 60000,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "16:41:00",
+    "seconds": 60060,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "16:45:00",
+    "seconds": 60300,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "16:47:00",
+    "seconds": 60420,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "16:55:00",
+    "seconds": 60900,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "16:56:00",
+    "seconds": 60960,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "17:00:00",
+    "seconds": 61200,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "17:02:00",
+    "seconds": 61320,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "17:10:00",
+    "seconds": 61800,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "17:11:00",
+    "seconds": 61860,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "17:15:00",
+    "seconds": 62100,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "17:16:00",
+    "seconds": 62160,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "17:24:00",
+    "seconds": 62640,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "17:26:00",
+    "seconds": 62760,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "17:30:00",
+    "seconds": 63000,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "17:31:00",
+    "seconds": 63060,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "17:39:00",
+    "seconds": 63540,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "17:41:00",
+    "seconds": 63660,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "17:45:00",
+    "seconds": 63900,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "17:46:00",
+    "seconds": 63960,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "17:54:00",
+    "seconds": 64440,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "17:55:00",
+    "seconds": 64500,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "18:00:00",
+    "seconds": 64800,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "18:00:00",
+    "seconds": 64800,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "18:09:00",
+    "seconds": 65340,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "18:10:00",
+    "seconds": 65400,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "18:13:00",
+    "seconds": 65580,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "18:15:00",
+    "seconds": 65700,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "18:25:00",
+    "seconds": 66300,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "18:27:00",
+    "seconds": 66420,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "18:28:00",
+    "seconds": 66480,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "18:31:00",
+    "seconds": 66660,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "18:43:00",
+    "seconds": 67380,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "18:45:00",
+    "seconds": 67500,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "18:47:00",
+    "seconds": 67620,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "18:58:00",
+    "seconds": 68280,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "19:05:00",
+    "seconds": 68700,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "19:07:00",
+    "seconds": 68820,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "19:15:00",
+    "seconds": 69300,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "19:23:00",
+    "seconds": 69780,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "19:27:00",
+    "seconds": 70020,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "19:31:00",
+    "seconds": 70260,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "19:32:00",
+    "seconds": 70320,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "19:42:00",
+    "seconds": 70920,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "19:46:00",
+    "seconds": 71160,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "19:47:00",
+    "seconds": 71220,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "20:01:00",
+    "seconds": 72060,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "20:02:00",
+    "seconds": 72120,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "20:02:00",
+    "seconds": 72120,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "20:07:00",
+    "seconds": 72420,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "20:21:00",
+    "seconds": 73260,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "20:27:00",
+    "seconds": 73620,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "20:27:00",
+    "seconds": 73620,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "20:31:00",
+    "seconds": 73860,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "20:41:00",
+    "seconds": 74460,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "20:47:00",
+    "seconds": 74820,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "20:57:00",
+    "seconds": 75420,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "21:01:00",
+    "seconds": 75660,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "21:01:00",
+    "seconds": 75660,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "21:07:00",
+    "seconds": 76020,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "21:20:00",
+    "seconds": 76800,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "21:26:00",
+    "seconds": 77160,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "21:27:00",
+    "seconds": 77220,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "21:30:00",
+    "seconds": 77400,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "21:39:00",
+    "seconds": 77940,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "21:46:00",
+    "seconds": 78360,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "21:56:00",
+    "seconds": 78960,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "21:59:00",
+    "seconds": 79140,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "22:00:00",
+    "seconds": 79200,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "22:06:00",
+    "seconds": 79560,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "22:19:00",
+    "seconds": 80340,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "22:25:00",
+    "seconds": 80700,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "22:33:00",
+    "seconds": 81180,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "22:53:00",
+    "seconds": 82380,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "22:58:00",
+    "seconds": 82680,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  },
+  {
+    "time": "23:03:00",
+    "seconds": 82980,
+    "direction": 0,
+    "dest": "Venice Beach",
+    "route": "1"
+  },
+  {
+    "time": "23:42:00",
+    "seconds": 85320,
+    "direction": 1,
+    "dest": "West LA Transit Center",
+    "route": "1"
+  }
+]

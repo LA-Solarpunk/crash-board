@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  departure-board:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - TRANSIT_API_KEY=${TRANSIT_API_KEY}
+      - LOCATION_LAT=${LOCATION_LAT}
+      - LOCATION_LON=${LOCATION_LON}
+      - GOOGLE_CALENDAR_ID=${GOOGLE_CALENDAR_ID}
+      - GOOGLE_SERVICE_ACCOUNT_JSON=${GOOGLE_SERVICE_ACCOUNT_JSON}
+      - WEATHER_API_KEY=${WEATHER_API_KEY}
+      - SPACE_STATUS_URL=${SPACE_STATUS_URL}
+    restart: unless-stopped
+    volumes:
+      - ./logs:/app/logs
