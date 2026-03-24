@@ -838,7 +838,7 @@ body.larger-bus-text .future-event-row {
 }
 
 .printer-name {
-    font-size: 18px;
+    font-size: 36px;
     font-weight: 700;
     color: #fff;
     overflow: hidden;
@@ -847,7 +847,7 @@ body.larger-bus-text .future-event-row {
 }
 
 .printer-state {
-    font-size: 13px;
+    font-size: 26px;
     font-weight: 700;
     letter-spacing: 0.08em;
     color: #fff;
