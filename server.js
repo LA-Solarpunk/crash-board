@@ -16,7 +16,8 @@ let cachedData = {
   buses: { data: [], lastFetch: 0 },
   calendar: { data: [], lastFetch: 0 },
   weather: { data: {}, lastFetch: 0 },
-  spaceStatus: { data: {}, lastFetch: 0 }
+  spaceStatus: { data: {}, lastFetch: 0 },
+  printers: { data: {}, lastFetch: 0 }
 };
 
 // config from env
@@ -32,7 +33,8 @@ const REFRESH_INTERVALS = {
   buses: 30 * 1000,          // 30 sec - realtime baby
   calendar: 5 * 60 * 1000,   // 5 min
   weather: 10 * 60 * 1000,   // 10 min
-  spaceStatus: 1 * 60 * 1000 // 1 min
+  spaceStatus: 1 * 60 * 1000, // 1 min
+  printers: 30 * 1000        // 30 sec
 };
 
 // ===== SCHEDULE LOADING (BBB R12 + Culver City 1 & 3) =====
@@ -534,6 +536,31 @@ async function fetchSpaceStatus() {
   }
 }
 
+// ===== PRINTER DATA =====
+async function fetchPrinterData() {
+  const now = Date.now();
+  if (now - cachedData.printers.lastFetch < REFRESH_INTERVALS.printers) {
+    return cachedData.printers.data;
+  }
+
+  try {
+    const resp = await fetch('http://localhost:3001/');
+    if (!resp.ok) {
+      console.error('printer api error:', resp.status);
+      return cachedData.printers.data;
+    }
+
+    cachedData.printers.data = await resp.json();
+    cachedData.printers.lastFetch = now;
+    console.log(`fetched printer data: ${Object.keys(cachedData.printers.data).length} printers`);
+    return cachedData.printers.data;
+
+  } catch (err) {
+    console.error('printer fetch error:', err.message);
+    return cachedData.printers.data;
+  }
+}
+
 // ===== API ENDPOINTS =====
 
 // for ESP32 vfd
@@ -547,11 +574,12 @@ app.get('/api/buses', async (req, res) => {
 
 // for web dashboard
 app.get('/api/all', async (req, res) => {
-  const [buses, calendar, weather, spaceStatus] = await Promise.all([
+  const [buses, calendar, weather, spaceStatus, printers] = await Promise.all([
     fetchBusData(),
     fetchCalendarData(),
     fetchWeatherData(),
-    fetchSpaceStatus()
+    fetchSpaceStatus(),
+    fetchPrinterData()
   ]);
 
   res.json({
@@ -559,6 +587,7 @@ app.get('/api/all', async (req, res) => {
     calendar,
     weather,
     spaceStatus,
+    printers,
     timestamp: Math.floor(Date.now() / 1000)
   });
 });
@@ -569,6 +598,7 @@ setInterval(() => {
   fetchCalendarData();
   fetchWeatherData();
   fetchSpaceStatus();
+  fetchPrinterData();
 }, 60 * 1000); // check every minute, each decides if it needs refresh
 
 // initial fetch
@@ -577,7 +607,8 @@ setInterval(() => {
     fetchBusData(),
     fetchCalendarData(),
     fetchWeatherData(),
-    fetchSpaceStatus()
+    fetchSpaceStatus(),
+    fetchPrinterData()
   ]);
   console.log('initial data loaded');
 })();
