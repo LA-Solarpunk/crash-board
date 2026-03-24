@@ -1,15 +1,15 @@
-require('dotenv').config();
-const express = require('express');
-const fetch = require('node-fetch');
-const { google } = require('googleapis');
-const path = require('path');
-const fs = require('fs');
+require("dotenv").config();
+const express = require("express");
+const fetch = require("node-fetch");
+const { google } = require("googleapis");
+const path = require("path");
+const fs = require("fs");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // serve static files
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 // cached data - refresh intervals
 let cachedData = {
@@ -17,7 +17,7 @@ let cachedData = {
   calendar: { data: [], lastFetch: 0 },
   weather: { data: {}, lastFetch: 0 },
   spaceStatus: { data: {}, lastFetch: 0 },
-  printers: { data: {}, lastFetch: 0 }
+  printers: { data: {}, lastFetch: 0 },
 };
 
 // config from env
@@ -30,11 +30,11 @@ const SPACE_STATUS_URL = process.env.SPACE_STATUS_URL;
 
 // refresh intervals (milliseconds)
 const REFRESH_INTERVALS = {
-  buses: 30 * 1000,          // 30 sec - realtime baby
-  calendar: 5 * 60 * 1000,   // 5 min
-  weather: 10 * 60 * 1000,   // 10 min
+  buses: 30 * 1000, // 30 sec - realtime baby
+  calendar: 5 * 60 * 1000, // 5 min
+  weather: 10 * 60 * 1000, // 10 min
   spaceStatus: 1 * 60 * 1000, // 1 min
-  printers: 30 * 1000        // 30 sec
+  printers: 30 * 1000, // 30 sec
 };
 
 // ===== SCHEDULE LOADING (BBB R12 + Culver City 1 & 3) =====
@@ -44,9 +44,9 @@ const REFRESH_INTERVALS = {
 function getDayType() {
   const now = new Date();
   const day = now.getDay(); // 0 = Sunday, 6 = Saturday
-  if (day === 0) return 'sunday';
-  if (day === 6) return 'saturday';
-  return 'weekday';
+  if (day === 0) return "sunday";
+  if (day === 6) return "saturday";
+  return "weekday";
 }
 
 function loadSchedules() {
@@ -55,20 +55,22 @@ function loadSchedules() {
 
   try {
     // BBB R12 (Big Blue Bus Rapid)
-    const r12Path = path.join(__dirname, 'schedules', `r12_${dayType}.json`);
+    const r12Path = path.join(__dirname, "schedules", `r12_${dayType}.json`);
     if (fs.existsSync(r12Path)) {
-      schedules.r12 = JSON.parse(fs.readFileSync(r12Path, 'utf8'));
+      schedules.r12 = JSON.parse(fs.readFileSync(r12Path, "utf8"));
     }
 
     // Metro 33
-    const m33Path = path.join(__dirname, 'schedules', `m33_${dayType}.json`);
+    const m33Path = path.join(__dirname, "schedules", `m33_${dayType}.json`);
     if (fs.existsSync(m33Path)) {
-      schedules.m33 = JSON.parse(fs.readFileSync(m33Path, 'utf8'));
+      schedules.m33 = JSON.parse(fs.readFileSync(m33Path, "utf8"));
     }
 
-    console.log(`loaded schedules for ${dayType}: R12=${(schedules.r12 && schedules.r12.length) || 0}, 33=${(schedules.m33 && schedules.m33.length) || 0}`);
+    console.log(
+      `loaded schedules for ${dayType}: R12=${(schedules.r12 && schedules.r12.length) || 0}, 33=${(schedules.m33 && schedules.m33.length) || 0}`,
+    );
   } catch (err) {
-    console.error('error loading schedules:', err.message);
+    console.error("error loading schedules:", err.message);
   }
 
   return schedules;
@@ -77,7 +79,8 @@ function loadSchedules() {
 function getScheduledDepartures() {
   const schedules = loadSchedules();
   const now = new Date();
-  const nowSeconds = (now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds();
+  const nowSeconds =
+    now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
 
   const departures = [];
 
@@ -110,15 +113,15 @@ function getScheduledDepartures() {
 
       // BRD = boarding (<1 min), ARR = arriving (1-2 min)
       let status = null;
-      if (minutes < 1) status = 'BRD';
-      else if (minutes <= 2) status = 'ARR';
+      if (minutes < 1) status = "BRD";
+      else if (minutes <= 2) status = "ARR";
 
       departures.push({
         route: entry.route,
         destination: entry.dest,
         minutes: minutes,
         status: status,
-        isLive: false // scheduled, not real-time
+        isLive: false, // scheduled, not real-time
       });
     }
   }
@@ -154,7 +157,7 @@ async function fetchBusData() {
   }
 
   if (!SWIFTLY_API_KEY) {
-    console.log('no swiftly api key - using scheduled departures only');
+    console.log("no swiftly api key - using scheduled departures only");
     const scheduledDepartures = getScheduledDepartures();
     cachedData.buses.data = scheduledDepartures.slice(0, 20);
     cachedData.buses.lastFetch = now;
@@ -162,77 +165,80 @@ async function fetchBusData() {
   }
 
   try {
-    const url = 'https://api.goswift.ly/real-time/lametro/gtfs-rt-trip-updates?format=json';
+    const url =
+      "https://api.goswift.ly/real-time/lametro/gtfs-rt-trip-updates?format=json";
     const resp = await fetch(url, {
-      headers: { 'Authorization': SWIFTLY_API_KEY }
+      headers: { Authorization: SWIFTLY_API_KEY },
     });
 
     if (!resp.ok) {
-      console.error('swiftly api error:', resp.status);
+      console.error("swiftly api error:", resp.status);
       return cachedData.buses.data;
     }
 
     const data = await resp.json();
-    console.log(`feed has ${(data.entity && data.entity.length) || 0} total entities`);
-    
+    console.log(
+      `feed has ${(data.entity && data.entity.length) || 0} total entities`,
+    );
+
     const departures = [];
     const nowUnix = Math.floor(Date.now() / 1000);
-    
+
     // our stops near crash space (venice & motor)
-    const ourStops = ['6939', '15292']; // eastbound and westbound
-    
+    const ourStops = ["6939", "15292"]; // eastbound and westbound
+
     let route33count = 0;
     let matchedStops = 0;
-    
+
     // find ALL buses at our stops (not just route 33)
     for (const entity of data.entity || []) {
       const tripUpdate = entity.tripUpdate;
       if (!tripUpdate || !tripUpdate.trip) continue;
-      
+
       const trip = tripUpdate.trip;
-      const routeId = trip.routeId || '';
-      
+      const routeId = trip.routeId || "";
+
       // track route 33 for logging
-      if (routeId.startsWith('33-')) route33count++;
-      
-      const headsign = trip.tripHeadsign || '';
-      
+      if (routeId.startsWith("33-")) route33count++;
+
+      const headsign = trip.tripHeadsign || "";
+
       // check stop time updates for our stops
       const stopTimeUpdate = tripUpdate.stopTimeUpdate || [];
       for (const stu of stopTimeUpdate) {
         if (!ourStops.includes(stu.stopId)) continue;
-        
+
         matchedStops++;
-        
+
         if (!stu.arrival || !stu.arrival.time) continue;
-        
+
         const arrivalTime = stu.arrival.time;
         const secondsUntil = arrivalTime - nowUnix;
-        
+
         if (secondsUntil < 0 || secondsUntil > 3600) continue;
-        
+
         const minutes = Math.floor(secondsUntil / 60);
-        
+
         // BRD = boarding (<1 min), ARR = arriving (1-2 min)
         let status = null;
-        if (minutes < 1) status = 'BRD';
-        else if (minutes <= 2) status = 'ARR';
-        
+        if (minutes < 1) status = "BRD";
+        else if (minutes <= 2) status = "ARR";
+
         let destination = headsign;
         if (!destination) {
-          destination = stu.stopId === '6939' ? 'Downtown LA' : 'Santa Monica';
+          destination = stu.stopId === "6939" ? "Downtown LA" : "Santa Monica";
         }
-        
+
         departures.push({
-          route: routeId.split('-')[0], // "33-13196" -> "33"
+          route: routeId.split("-")[0], // "33-13196" -> "33"
           destination: destination,
           minutes: minutes,
           status: status,
-          isLive: stu.arrival.realtime || false
+          isLive: stu.arrival.realtime || false,
         });
       }
     }
-    
+
     // merge with scheduled departures and deduplicate
     const scheduledDepartures = getScheduledDepartures();
 
@@ -241,8 +247,8 @@ async function fetchBusData() {
     // - Same route
     // - Same destination (close enough)
     // - Within 5 minutes of scheduled time
-    const dedupedScheduled = scheduledDepartures.filter(scheduled => {
-      const matchingLive = departures.find(live => {
+    const dedupedScheduled = scheduledDepartures.filter((scheduled) => {
+      const matchingLive = departures.find((live) => {
         if (live.route !== scheduled.route) return false;
 
         // Check if destinations match (compare key words)
@@ -250,10 +256,13 @@ async function fetchBusData() {
         const schedDestLower = scheduled.destination.toLowerCase();
 
         // Check for key destination matches
-        const destMatch = (liveDestLower.includes('downtown') && schedDestLower.includes('downtown')) ||
-                         (liveDestLower.includes('santa monica') && schedDestLower.includes('santa monica')) ||
-                         liveDestLower.includes(schedDestLower.substring(0, 8)) ||
-                         schedDestLower.includes(liveDestLower.substring(0, 8));
+        const destMatch =
+          (liveDestLower.includes("downtown") &&
+            schedDestLower.includes("downtown")) ||
+          (liveDestLower.includes("santa monica") &&
+            schedDestLower.includes("santa monica")) ||
+          liveDestLower.includes(schedDestLower.substring(0, 8)) ||
+          schedDestLower.includes(liveDestLower.substring(0, 8));
 
         if (!destMatch) return false;
 
@@ -263,7 +272,9 @@ async function fetchBusData() {
       });
 
       if (matchingLive) {
-        console.log(`Dedup: Scheduled ${scheduled.route} to ${scheduled.destination} at ${scheduled.minutes}min matches live at ${matchingLive.minutes}min`);
+        console.log(
+          `Dedup: Scheduled ${scheduled.route} to ${scheduled.destination} at ${scheduled.minutes}min matches live at ${matchingLive.minutes}min`,
+        );
       }
 
       return !matchingLive;
@@ -278,36 +289,43 @@ async function fetchBusData() {
     const seen = new Set();
 
     // Process live buses first
-    allDepartures.filter(d => d.isLive).forEach(dep => {
-      const key = `${dep.route}-${dep.destination}-${dep.minutes}`;
-      if (!seen.has(key)) {
-        seen.add(key);
-        uniqueDepartures.push(dep);
-      }
-    });
+    allDepartures
+      .filter((d) => d.isLive)
+      .forEach((dep) => {
+        const key = `${dep.route}-${dep.destination}-${dep.minutes}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          uniqueDepartures.push(dep);
+        }
+      });
 
     // Then process scheduled buses
-    allDepartures.filter(d => !d.isLive).forEach(dep => {
-      const key = `${dep.route}-${dep.destination}-${dep.minutes}`;
-      if (!seen.has(key)) {
-        seen.add(key);
-        uniqueDepartures.push(dep);
-      }
-    });
+    allDepartures
+      .filter((d) => !d.isLive)
+      .forEach((dep) => {
+        const key = `${dep.route}-${dep.destination}-${dep.minutes}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          uniqueDepartures.push(dep);
+        }
+      });
 
     // sort by time
     uniqueDepartures.sort((a, b) => a.minutes - b.minutes);
 
-    console.log(`metro trips: ${departures.length}, scheduled trips: ${dedupedScheduled.length} (${scheduledDepartures.length} before dedup), unique: ${uniqueDepartures.length}`);
+    console.log(
+      `metro trips: ${departures.length}, scheduled trips: ${dedupedScheduled.length} (${scheduledDepartures.length} before dedup), unique: ${uniqueDepartures.length}`,
+    );
 
     cachedData.buses.data = uniqueDepartures.slice(0, 20);
     cachedData.buses.lastFetch = now;
 
-    console.log(`fetched ${allDepartures.length} bus departures (${departures.length} metro + ${scheduledDepartures.length} scheduled)`);
+    console.log(
+      `fetched ${allDepartures.length} bus departures (${departures.length} metro + ${scheduledDepartures.length} scheduled)`,
+    );
     return cachedData.buses.data;
-
   } catch (err) {
-    console.error('bus fetch error:', err.message);
+    console.error("bus fetch error:", err.message);
     return cachedData.buses.data; // return stale on error
   }
 }
@@ -325,36 +343,37 @@ async function fetchCalendarData() {
 
   try {
     const timeMin = new Date().toISOString();
-    const timeMax = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(); // 2 weeks
-    
+    const timeMax = new Date(
+      Date.now() + 14 * 24 * 60 * 60 * 1000,
+    ).toISOString(); // 2 weeks
+
     // explicitly request all fields including description
     const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(GOOGLE_CALENDAR_ID)}/events?key=${GOOGLE_API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime&maxResults=50`;
-    
+
     const resp = await fetch(url);
-    
+
     if (resp.ok) {
       const data = await resp.json();
-      
-      const events = (data.items || []).map(event => ({
-        title: event.summary || 'Untitled Event',
-        location: event.location || '',
+
+      const events = (data.items || []).map((event) => ({
+        title: event.summary || "Untitled Event",
+        location: event.location || "",
         start: event.start.dateTime || event.start.date,
-        end: event.end ? (event.end.dateTime || event.end.date) : null,
-        description: event.description || '',
-        status: event.status
+        end: event.end ? event.end.dateTime || event.end.date : null,
+        description: event.description || "",
+        status: event.status,
       }));
 
       cachedData.calendar.data = events;
       cachedData.calendar.lastFetch = now;
-      
+
       console.log(`fetched ${events.length} calendar events`);
       return events;
     }
 
     return cachedData.calendar.data;
-
   } catch (err) {
-    console.error('calendar fetch error:', err.message);
+    console.error("calendar fetch error:", err.message);
     return cachedData.calendar.data;
   }
 }
@@ -364,12 +383,12 @@ async function fetchCalendarData() {
 var nwsCache = {
   forecastUrl: null,
   forecastHourlyUrl: null,
-  gridpointResolved: false
+  gridpointResolved: false,
 };
 
 var NWS_HEADERS = {
-  'User-Agent': '(crash-space-board, github.com/lavie/crash-space-board)',
-  'Accept': 'application/geo+json'
+  "User-Agent": "(crash-space-board, github.com/lavie/crash-space-board)",
+  Accept: "application/geo+json",
 };
 
 // CRASH Space coordinates
@@ -380,10 +399,10 @@ async function resolveNWSGridpoint() {
   if (nwsCache.gridpointResolved) return;
 
   try {
-    var pointsUrl = 'https://api.weather.gov/points/' + NWS_LAT + ',' + NWS_LON;
+    var pointsUrl = "https://api.weather.gov/points/" + NWS_LAT + "," + NWS_LON;
     var resp = await fetch(pointsUrl, { headers: NWS_HEADERS });
     if (!resp.ok) {
-      console.error('NWS points error:', resp.status);
+      console.error("NWS points error:", resp.status);
       return;
     }
 
@@ -391,10 +410,16 @@ async function resolveNWSGridpoint() {
     nwsCache.forecastUrl = data.properties.forecast;
     nwsCache.forecastHourlyUrl = data.properties.forecastHourly;
     nwsCache.gridpointResolved = true;
-    console.log('NWS resolved: gridpoint ' + data.properties.gridId + '/' +
-                data.properties.gridX + ',' + data.properties.gridY);
+    console.log(
+      "NWS resolved: gridpoint " +
+        data.properties.gridId +
+        "/" +
+        data.properties.gridX +
+        "," +
+        data.properties.gridY,
+    );
   } catch (err) {
-    console.error('NWS gridpoint resolve error:', err.message);
+    console.error("NWS gridpoint resolve error:", err.message);
   }
 }
 
@@ -408,25 +433,30 @@ async function fetchWeatherData() {
     await resolveNWSGridpoint();
     if (!nwsCache.forecastHourlyUrl) return cachedData.weather.data || {};
 
-    var hourlyResp = await fetch(nwsCache.forecastHourlyUrl, { headers: NWS_HEADERS });
+    var hourlyResp = await fetch(nwsCache.forecastHourlyUrl, {
+      headers: NWS_HEADERS,
+    });
     if (!hourlyResp.ok) {
-      console.error('NWS hourly forecast error:', hourlyResp.status);
+      console.error("NWS hourly forecast error:", hourlyResp.status);
       return cachedData.weather.data || {};
     }
 
     var hourlyData = await hourlyResp.json();
-    var hourlyPeriods = (hourlyData.properties && hourlyData.properties.periods) || [];
+    var hourlyPeriods =
+      (hourlyData.properties && hourlyData.properties.periods) || [];
 
     var current = hourlyPeriods[0];
     if (!current) return cachedData.weather.data || {};
 
     cachedData.weather.data = {
       temp: current.temperature,
-      condition: current.shortForecast || '',
-      description: current.shortForecast || '',
-      humidity: current.relativeHumidity ? current.relativeHumidity.value : null,
+      condition: current.shortForecast || "",
+      description: current.shortForecast || "",
+      humidity: current.relativeHumidity
+        ? current.relativeHumidity.value
+        : null,
       windSpeed: current.windSpeed || null,
-      windDirection: current.windDirection || null
+      windDirection: current.windDirection || null,
     };
 
     // Get daily forecast for hi/lo + upcoming periods
@@ -435,17 +465,20 @@ async function fetchWeatherData() {
       if (fcResp.ok) {
         var fcData = await fcResp.json();
         var periods = (fcData.properties && fcData.properties.periods) || [];
-        var todayHi = null, todayLo = null;
+        var todayHi = null,
+          todayLo = null;
         var forecast = [];
         for (var p = 0; p < Math.min(periods.length, 7); p++) {
-          if (periods[p].isDaytime && todayHi === null) todayHi = periods[p].temperature;
-          if (!periods[p].isDaytime && todayLo === null) todayLo = periods[p].temperature;
+          if (periods[p].isDaytime && todayHi === null)
+            todayHi = periods[p].temperature;
+          if (!periods[p].isDaytime && todayLo === null)
+            todayLo = periods[p].temperature;
           if (p > 0) {
             forecast.push({
               name: periods[p].name,
               temp: periods[p].temperature,
               condition: periods[p].shortForecast,
-              isDaytime: periods[p].isDaytime
+              isDaytime: periods[p].isDaytime,
             });
           }
         }
@@ -456,12 +489,15 @@ async function fetchWeatherData() {
     }
 
     cachedData.weather.lastFetch = now;
-    console.log('weather: ' + cachedData.weather.data.temp + '\u00B0F, ' +
-                cachedData.weather.data.condition);
+    console.log(
+      "weather: " +
+        cachedData.weather.data.temp +
+        "\u00B0F, " +
+        cachedData.weather.data.condition,
+    );
     return cachedData.weather.data;
-
   } catch (err) {
-    console.error('weather fetch error:', err.message);
+    console.error("weather fetch error:", err.message);
     return cachedData.weather.data || {};
   }
 }
@@ -474,46 +510,53 @@ async function fetchSpaceStatus() {
   }
 
   try {
-    const resp = await fetch('https://crashspacela.com/sign/');
-    
+    const resp = await fetch("https://crashspacela.com/sign/");
+
     if (resp.ok) {
       const html = await resp.text();
-      
+
       // parse the HTML
       // look for bgcolor in the table tag
-      const isOpen = html.includes('bgcolor="#33FF33"') || html.includes('bgcolor="#00FF00"');
+      const isOpen =
+        html.includes('bgcolor="#33FF33"') ||
+        html.includes('bgcolor="#00FF00"');
       const isClosed = html.includes('bgcolor="#FF3333"');
-      
+
       // extract message if present
-      let message = '';
+      let message = "";
       const msgMatch = html.match(/message from (\w+): (.+?)</);
       if (msgMatch) {
         message = msgMatch[2];
       }
-      
+
       // extract last update time from first table row
-      let lastUpdate = '';
-      const timeMatch = html.match(/<td>\s*(\d{4}-\d{2}-\d{2},\s*\d{1,2}:\d{2}\s*[ap]m)/);
+      let lastUpdate = "";
+      const timeMatch = html.match(
+        /<td>\s*(\d{4}-\d{2}-\d{2},\s*\d{1,2}:\d{2}\s*[ap]m)/,
+      );
       if (timeMatch) {
         lastUpdate = timeMatch[1];
       }
 
       // extract closing time if open
-      let closingTime = '';
-      const closeMatch = html.match(/will close .+?at (\d{4}-\d{2}-\d{2},\s*\d{1,2}:\d{2}\s*[ap]m)/);
+      let closingTime = "";
+      const closeMatch = html.match(
+        /will close .+?at (\d{4}-\d{2}-\d{2},\s*\d{1,2}:\d{2}\s*[ap]m)/,
+      );
       if (closeMatch) {
         closingTime = closeMatch[1];
       }
 
       // extract recent update history (last 5 button presses)
       var history = [];
-      var rowRegex = /<tr><td>\s*(\w+)\s*<\/td><td>(\w+)<\/td><td>\s*(\d{4}-\d{2}-\d{2},\s*\d{1,2}:\d{2}\s*[ap]m)\s*<\/td><td>\s*(\d+)\s*<\/td><td>\s*(.+?)\s*<\/td><\/tr>/g;
+      var rowRegex =
+        /<tr><td>\s*(\w+)\s*<\/td><td>(\w+)<\/td><td>\s*(\d{4}-\d{2}-\d{2},\s*\d{1,2}:\d{2}\s*[ap]m)\s*<\/td><td>\s*(\d+)\s*<\/td><td>\s*(.+?)\s*<\/td><\/tr>/g;
       var rowMatch;
       while ((rowMatch = rowRegex.exec(html)) !== null) {
         history.push({
           time: rowMatch[3],
           minutes: parseInt(rowMatch[4]),
-          message: rowMatch[5].trim()
+          message: rowMatch[5].trim(),
         });
       }
 
@@ -523,15 +566,14 @@ async function fetchSpaceStatus() {
         message: message,
         lastUpdate: lastUpdate,
         closingTime: closingTime,
-        history: history
+        history: history,
       };
       cachedData.spaceStatus.lastFetch = now;
     }
 
     return cachedData.spaceStatus.data;
-
   } catch (err) {
-    console.error('space status fetch error:', err.message);
+    console.error("space status fetch error:", err.message);
     return cachedData.spaceStatus.data;
   }
 }
@@ -544,19 +586,20 @@ async function fetchPrinterData() {
   }
 
   try {
-    const resp = await fetch('http://localhost:3001/');
+    const resp = await fetch("http://archlinux:3001/");
     if (!resp.ok) {
-      console.error('printer api error:', resp.status);
+      console.error("printer api error:", resp.status);
       return cachedData.printers.data;
     }
 
     cachedData.printers.data = await resp.json();
     cachedData.printers.lastFetch = now;
-    console.log(`fetched printer data: ${Object.keys(cachedData.printers.data).length} printers`);
+    console.log(
+      `fetched printer data: ${Object.keys(cachedData.printers.data).length} printers`,
+    );
     return cachedData.printers.data;
-
   } catch (err) {
-    console.error('printer fetch error:', err.message);
+    console.error("printer fetch error:", err.message);
     return cachedData.printers.data;
   }
 }
@@ -564,22 +607,22 @@ async function fetchPrinterData() {
 // ===== API ENDPOINTS =====
 
 // for ESP32 vfd
-app.get('/api/buses', async (req, res) => {
+app.get("/api/buses", async (req, res) => {
   const buses = await fetchBusData();
   res.json({
     timestamp: Math.floor(Date.now() / 1000),
-    departures: buses
+    departures: buses,
   });
 });
 
 // for web dashboard
-app.get('/api/all', async (req, res) => {
+app.get("/api/all", async (req, res) => {
   const [buses, calendar, weather, spaceStatus, printers] = await Promise.all([
     fetchBusData(),
     fetchCalendarData(),
     fetchWeatherData(),
     fetchSpaceStatus(),
-    fetchPrinterData()
+    fetchPrinterData(),
   ]);
 
   res.json({
@@ -588,7 +631,7 @@ app.get('/api/all', async (req, res) => {
     weather,
     spaceStatus,
     printers,
-    timestamp: Math.floor(Date.now() / 1000)
+    timestamp: Math.floor(Date.now() / 1000),
   });
 });
 
@@ -608,9 +651,9 @@ setInterval(() => {
     fetchCalendarData(),
     fetchWeatherData(),
     fetchSpaceStatus(),
-    fetchPrinterData()
+    fetchPrinterData(),
   ]);
-  console.log('initial data loaded');
+  console.log("initial data loaded");
 })();
 
 app.listen(PORT, () => {

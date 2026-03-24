@@ -18,6 +18,10 @@
       </div>
     </div>
     <div class="events-grid" id="events-grid"></div>
+    <div class="card card-printers" id="printers-card">
+      <div class="card-title">3D PRINTERS</div>
+      <div id="printer-rows"></div>
+    </div>
     <div class="card card-buses">
       <div class="card-title">BUSES</div>
       <div id="bus-rows"></div>
@@ -255,7 +259,7 @@
         eventsGrid.innerHTML = '';
 
         if (data.calendar && data.calendar.length > 0) {
-          const numCards = ROTATION_CONFIG && ROTATION_CONFIG.experiments.horizontalCards ? 4 : 5;
+          const numCards = 4;
 
           data.calendar.slice(0, numCards).forEach(event => {
             const card = createEventCard(event);
@@ -378,10 +382,44 @@
         }
 
         if (data.weather) renderWeather(data.weather);
+        renderPrinters(data.printers);
 
       } catch (err) {
         console.error('refresh error:', err);
       }
+    }
+
+    function renderPrinters(printers) {
+      const container = document.getElementById('printer-rows');
+      container.innerHTML = '';
+
+      if (!printers || Object.keys(printers).length === 0) {
+        container.innerHTML = '<div class="no-data">no printers</div>';
+        return;
+      }
+
+      Object.entries(printers).forEach(([name, info]) => {
+        const row = document.createElement('div');
+        row.className = 'printer-row';
+
+        const state = info.status || 'unknown';
+        const isPrinting = /print/i.test(state);
+        const stateClass = isPrinting ? 'printer-state printing' : 'printer-state';
+
+        const pct = Math.round(info.progress || 0);
+        const progressHtml = isPrinting
+          ? `<div class="printer-progress-bar"><div class="printer-progress-fill" style="width:${pct}%"></div></div>`
+          : '';
+
+        row.innerHTML = `
+          <div class="printer-header">
+            <span class="printer-name">${name}</span>
+            <span class="${stateClass}">${state.toUpperCase()}</span>
+          </div>
+          ${progressHtml}
+        `;
+        container.appendChild(row);
+      });
     }
 
     function parseTags(title, description) {
