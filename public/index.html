@@ -1,523 +1,677 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRASH Space</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sixtyfour:wght@400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="top-row">
-    <div class="rotation-indicators" id="rotation-indicators">
-      <div class="rotation-dots" id="rotation-dots"></div>
-      <div class="rotation-progress" id="rotation-progress">
-        <div class="rotation-progress-bar" id="rotation-progress-bar"></div>
-      </div>
-    </div>
-    <div class="events-grid" id="events-grid"></div>
-    <div class="card card-printers" id="printers-card">
-      <div class="card-title">3D PRINTERS</div>
-      <div id="printer-rows"></div>
-    </div>
-    <div class="card card-buses">
-      <div class="card-title">BUSES</div>
-      <div id="bus-rows"></div>
-      <div class="next-bus-highlight" id="next-bus-highlight"></div>
-    </div>
-  </div>
-  
-  <div class="bottom-row">
-    <div class="future-events">
-      <div class="section-title">FUTURE EVENTS</div>
-      <div class="future-events-scroll">
-        <div id="future-events-list"></div>
-      </div>
-    </div>
-
-    <div class="card card-weather" id="weather-card">
-      <div class="weather-current">
-        <div class="weather-info">
-          <div class="weather-condition" id="weather-condition">--</div>
-          <div class="weather-hilo" id="weather-hilo"></div>
-          <div class="weather-details" id="weather-details"></div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CRASH Space</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Sixtyfour:wght@400&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="top-row">
+            <div class="rotation-indicators" id="rotation-indicators">
+                <div class="rotation-dots" id="rotation-dots"></div>
+                <div class="rotation-progress" id="rotation-progress">
+                    <div
+                        class="rotation-progress-bar"
+                        id="rotation-progress-bar"
+                    ></div>
+                </div>
+            </div>
+            <div class="events-grid" id="events-grid"></div>
+            <div class="card card-printers" id="printers-card">
+                <div class="card-title">3D PRINTERS</div>
+                <div id="printer-rows"></div>
+            </div>
+            <div class="card card-buses">
+                <div class="card-title">BUSES</div>
+                <div id="bus-rows"></div>
+                <div class="next-bus-highlight" id="next-bus-highlight"></div>
+            </div>
         </div>
-        <div class="weather-temp" id="weather-temp">--</div>
-      </div>
-      <div class="weather-forecast" id="weather-forecast"></div>
-    </div>
 
-    <div class="status-card" id="status-card">
-      <div class="status-top">
-        <div class="status-main" id="status-main">—</div>
-      </div>
-      <div class="status-bottom" id="status-bottom">
-        <span class="status-bottom-label">Last opened:</span>
-        <span class="status-bottom-time" id="status-bottom-time">—</span>
-      </div>
-    </div>
-  </div>
-  
-  <div class="info-bar">
-    <div class="info-date" id="date">—</div>
-    <div class="info-item clock-item">
-      <span id="clock">--:--:--</span>
-    </div>
-  </div>
+        <div class="bottom-row">
+            <div class="future-events">
+                <div class="section-title">FUTURE EVENTS</div>
+                <div class="future-events-scroll">
+                    <div id="future-events-list"></div>
+                </div>
+            </div>
 
-  <script>
-    // === CARD ROTATION CONFIG ===
-    let ROTATION_CONFIG = null;
-    let rotationProgress = 0;
-    let rotationStartTime = 0;
+            <div class="card card-weather" id="weather-card">
+                <div class="weather-current">
+                    <div class="weather-info">
+                        <div class="weather-condition" id="weather-condition">
+                            --
+                        </div>
+                        <div class="weather-hilo" id="weather-hilo"></div>
+                        <div class="weather-details" id="weather-details"></div>
+                    </div>
+                    <div class="weather-temp" id="weather-temp">--</div>
+                </div>
+                <div class="weather-forecast" id="weather-forecast"></div>
+            </div>
 
-    // Load config from JSON file
-    async function loadConfig() {
-      try {
-        const resp = await fetch('/cards-config.json');
-        const config = await resp.json();
-        ROTATION_CONFIG = {
-          enabled: config.rotation.enabled,
-          interval: config.rotation.interval,
-          positions: config.rotation.positions,
-          cardTypes: config.cardTypes,
-          currentIndex: 0,
-          indicators: config.rotation.indicators,
-          experiments: config.experiments || {}
-        };
+            <div class="status-card" id="status-card">
+                <div class="status-top">
+                    <div class="status-main" id="status-main">—</div>
+                </div>
+                <div class="status-bottom" id="status-bottom">
+                    <span class="status-bottom-label">Last opened:</span>
+                    <span class="status-bottom-time" id="status-bottom-time"
+                        >—</span
+                    >
+                </div>
+            </div>
+        </div>
 
-        // Apply experimental features
-        if (ROTATION_CONFIG.experiments.largerBusText) {
-          document.body.classList.add('larger-bus-text');
-        }
+        <div class="info-bar">
+            <div class="info-date" id="date">—</div>
+            <div class="info-item clock-item">
+                <span id="clock">--:--:--</span>
+            </div>
+        </div>
 
-        if (ROTATION_CONFIG.experiments.swapBusesAndFuture) {
-          document.body.classList.add('swap-buses-future');
-        }
+        <script>
+            // === CARD ROTATION CONFIG ===
+            let ROTATION_CONFIG = null;
+            let rotationProgress = 0;
+            let rotationStartTime = 0;
 
-        if (ROTATION_CONFIG.experiments.nextBusHighlight) {
-          document.body.classList.add('next-bus-highlight-enabled');
-        }
+            // Load config from JSON file
+            async function loadConfig() {
+                try {
+                    const resp = await fetch("/cards-config.json");
+                    const config = await resp.json();
+                    ROTATION_CONFIG = {
+                        enabled: config.rotation.enabled,
+                        interval: config.rotation.interval,
+                        positions: config.rotation.positions,
+                        cardTypes: config.cardTypes,
+                        currentIndex: 0,
+                        indicators: config.rotation.indicators,
+                        experiments: config.experiments || {},
+                    };
 
-        if (ROTATION_CONFIG.experiments.horizontalCards) {
-          document.body.classList.add('horizontal-cards');
-        }
+                    // Apply experimental features
+                    if (ROTATION_CONFIG.experiments.largerBusText) {
+                        document.body.classList.add("larger-bus-text");
+                    }
 
-        initializeIndicators();
-      } catch (err) {
-        console.error('Failed to load cards config:', err);
-        // Fallback to default config
-        ROTATION_CONFIG = {
-          enabled: false,
-          interval: 30000,
-          positions: [4, 5, 6],
-          cardTypes: [
-            { type: 'events', count: 3 },
-            { type: 'buses', count: 1 }
-          ],
-          currentIndex: 0,
-          indicators: { dots: true, progressBar: true },
-          experiments: {}
-        };
-      }
-    }
+                    if (ROTATION_CONFIG.experiments.swapBusesAndFuture) {
+                        document.body.classList.add("swap-buses-future");
+                    }
 
-    function initializeIndicators() {
-      if (!ROTATION_CONFIG.enabled || ROTATION_CONFIG.cardTypes.length <= 1) {
-        document.getElementById('rotation-indicators').classList.remove('active');
-        return;
-      }
+                    if (ROTATION_CONFIG.experiments.nextBusHighlight) {
+                        document.body.classList.add(
+                            "next-bus-highlight-enabled",
+                        );
+                    }
 
-      const container = document.getElementById('rotation-indicators');
-      container.classList.add('active');
+                    if (ROTATION_CONFIG.experiments.horizontalCards) {
+                        document.body.classList.add("horizontal-cards");
+                    }
 
-      // Initialize dots
-      if (ROTATION_CONFIG.indicators.dots) {
-        const dotsContainer = document.getElementById('rotation-dots');
-        dotsContainer.innerHTML = '';
-        ROTATION_CONFIG.cardTypes.forEach((card, index) => {
-          const dot = document.createElement('div');
-          dot.className = 'rotation-dot';
-          if (index === 0) dot.classList.add('active');
-          dotsContainer.appendChild(dot);
-        });
-      }
-
-      // Show/hide progress bar
-      const progressBar = document.getElementById('rotation-progress');
-      if (ROTATION_CONFIG.indicators.progressBar) {
-        progressBar.style.display = 'block';
-      } else {
-        progressBar.style.display = 'none';
-      }
-    }
-
-    function updateIndicators() {
-      if (!ROTATION_CONFIG || !ROTATION_CONFIG.enabled) return;
-
-      // Update dots
-      if (ROTATION_CONFIG.indicators.dots) {
-        const dots = document.querySelectorAll('.rotation-dot');
-        dots.forEach((dot, index) => {
-          if (index === ROTATION_CONFIG.currentIndex) {
-            dot.classList.add('active');
-          } else {
-            dot.classList.remove('active');
-          }
-        });
-      }
-
-      // Update progress bar
-      if (ROTATION_CONFIG.indicators.progressBar) {
-        const elapsed = Date.now() - rotationStartTime;
-        const progress = Math.min((elapsed / ROTATION_CONFIG.interval) * 100, 100);
-        document.getElementById('rotation-progress-bar').style.width = progress + '%';
-      }
-    }
-
-    function updateClock() {
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString('en-GB', { hour12: false });
-      const dateStr = now.toLocaleDateString('en-US', { 
-        weekday: 'long',
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric'
-      });
-      document.getElementById('clock').textContent = timeStr;
-      document.getElementById('date').textContent = dateStr;
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    function stripHtml(text) {
-      // replace <br> tags with newlines first
-      text = text.replace(/<br\s*\/?>/gi, '\n');
-      // strip all other HTML
-      const div = document.createElement('div');
-      div.innerHTML = text;
-      return div.textContent || div.innerText || '';
-    }
-
-    // ===== WEATHER =====
-    function renderWeather(weather) {
-      var tempEl = document.getElementById('weather-temp');
-      var condEl = document.getElementById('weather-condition');
-      var hiloEl = document.getElementById('weather-hilo');
-      var detailEl = document.getElementById('weather-details');
-      var forecastEl = document.getElementById('weather-forecast');
-
-      if (!weather || weather.temp === null || weather.temp === undefined) {
-        tempEl.textContent = '--';
-        condEl.textContent = 'No data';
-        hiloEl.textContent = '';
-        detailEl.textContent = '';
-        forecastEl.innerHTML = '';
-        return;
-      }
-
-      tempEl.textContent = weather.temp + '\u00B0';
-      condEl.textContent = weather.description || weather.condition || '';
-
-      if (weather.tempMax !== undefined && weather.tempMin !== undefined) {
-        hiloEl.textContent = 'H ' + weather.tempMax + '\u00B0  L ' + weather.tempMin + '\u00B0';
-      } else {
-        hiloEl.textContent = '';
-      }
-
-      var details = [];
-      if (weather.humidity !== null && weather.humidity !== undefined) {
-        details.push(weather.humidity + '% humid');
-      }
-      if (weather.windSpeed) {
-        details.push('Wind ' + weather.windSpeed + (weather.windDirection ? ' ' + weather.windDirection : ''));
-      }
-      detailEl.textContent = details.join(' \u00B7 ');
-
-      forecastEl.innerHTML = '';
-      if (weather.forecast && weather.forecast.length > 0) {
-        for (var f = 0; f < weather.forecast.length; f++) {
-          var fc = weather.forecast[f];
-          var cell = document.createElement('div');
-          cell.className = 'forecast-cell';
-          cell.innerHTML =
-            '<span class="forecast-name">' + fc.name + '</span>' +
-            '<span class="forecast-temp">' + fc.temp + '\u00B0</span>';
-          forecastEl.appendChild(cell);
-        }
-      }
-    }
-
-    async function refreshData() {
-      try {
-        const resp = await fetch('/api/all');
-        const data = await resp.json();
-
-        const eventsGrid = document.getElementById('events-grid');
-        eventsGrid.innerHTML = '';
-
-        if (data.calendar && data.calendar.length > 0) {
-          const numCards = 4;
-
-          data.calendar.slice(0, numCards).forEach(event => {
-            const card = createEventCard(event);
-            eventsGrid.appendChild(card);
-          });
-
-          const futureList = document.getElementById('future-events-list');
-          futureList.innerHTML = '';
-
-          if (data.calendar.length > numCards) {
-            data.calendar.slice(numCards).forEach((event, index) => {
-              const row = createFutureEventRow(event, index + numCards + 1);
-              futureList.appendChild(row);
-            });
-          }
-        }
-
-        const busRows = document.getElementById('bus-rows');
-        busRows.innerHTML = '';
-
-        if (data.buses && data.buses.length > 0) {
-          cachedBuses = data.buses; // Cache for next bus highlight
-          updateNextBusHighlight(); // Update highlight immediately
-
-          data.buses.slice(0, 10).forEach(bus => {
-            let timeStr;
-            if (bus.status === 'BRD') {
-              timeStr = '<span class="boarding">BRD</span>';
-            } else if (bus.status === 'ARR') {
-              timeStr = '<span class="arriving">ARR</span>';
-            } else if (bus.minutes > 60) {
-              // Show absolute arrival time for buses > 60 min away
-              const arrivalTime = new Date(Date.now() + bus.minutes * 60000);
-              const timeFormatted = arrivalTime.toLocaleTimeString('en-GB', {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false
-              });
-              timeStr = `<span class="minutes">${timeFormatted}</span>`;
-            } else {
-              timeStr = `<span class="minutes">${bus.minutes}</span>`;
+                    initializeIndicators();
+                } catch (err) {
+                    console.error("Failed to load cards config:", err);
+                    // Fallback to default config
+                    ROTATION_CONFIG = {
+                        enabled: false,
+                        interval: 30000,
+                        positions: [4, 5, 6],
+                        cardTypes: [
+                            { type: "events", count: 3 },
+                            { type: "buses", count: 1 },
+                        ],
+                        currentIndex: 0,
+                        indicators: { dots: true, progressBar: true },
+                        experiments: {},
+                    };
+                }
             }
-            
-            const row = document.createElement('div');
-            row.className = 'bus-row';
-            const routeClass = `route route-${bus.route.toLowerCase()}`;
-            const liveIcon = bus.isLive ? '<span class="live-icon"></span>' : '';
-            row.innerHTML = `
+
+            function initializeIndicators() {
+                if (
+                    !ROTATION_CONFIG.enabled ||
+                    ROTATION_CONFIG.cardTypes.length <= 1
+                ) {
+                    document
+                        .getElementById("rotation-indicators")
+                        .classList.remove("active");
+                    return;
+                }
+
+                const container = document.getElementById(
+                    "rotation-indicators",
+                );
+                container.classList.add("active");
+
+                // Initialize dots
+                if (ROTATION_CONFIG.indicators.dots) {
+                    const dotsContainer =
+                        document.getElementById("rotation-dots");
+                    dotsContainer.innerHTML = "";
+                    ROTATION_CONFIG.cardTypes.forEach((card, index) => {
+                        const dot = document.createElement("div");
+                        dot.className = "rotation-dot";
+                        if (index === 0) dot.classList.add("active");
+                        dotsContainer.appendChild(dot);
+                    });
+                }
+
+                // Show/hide progress bar
+                const progressBar =
+                    document.getElementById("rotation-progress");
+                if (ROTATION_CONFIG.indicators.progressBar) {
+                    progressBar.style.display = "block";
+                } else {
+                    progressBar.style.display = "none";
+                }
+            }
+
+            function updateIndicators() {
+                if (!ROTATION_CONFIG || !ROTATION_CONFIG.enabled) return;
+
+                // Update dots
+                if (ROTATION_CONFIG.indicators.dots) {
+                    const dots = document.querySelectorAll(".rotation-dot");
+                    dots.forEach((dot, index) => {
+                        if (index === ROTATION_CONFIG.currentIndex) {
+                            dot.classList.add("active");
+                        } else {
+                            dot.classList.remove("active");
+                        }
+                    });
+                }
+
+                // Update progress bar
+                if (ROTATION_CONFIG.indicators.progressBar) {
+                    const elapsed = Date.now() - rotationStartTime;
+                    const progress = Math.min(
+                        (elapsed / ROTATION_CONFIG.interval) * 100,
+                        100,
+                    );
+                    document.getElementById(
+                        "rotation-progress-bar",
+                    ).style.width = progress + "%";
+                }
+            }
+
+            function updateClock() {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString("en-GB", {
+                    hour12: false,
+                });
+                const dateStr = now.toLocaleDateString("en-US", {
+                    weekday: "long",
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                });
+                document.getElementById("clock").textContent = timeStr;
+                document.getElementById("date").textContent = dateStr;
+            }
+            setInterval(updateClock, 1000);
+            updateClock();
+
+            function stripHtml(text) {
+                // replace <br> tags with newlines first
+                text = text.replace(/<br\s*\/?>/gi, "\n");
+                // strip all other HTML
+                const div = document.createElement("div");
+                div.innerHTML = text;
+                return div.textContent || div.innerText || "";
+            }
+
+            // ===== WEATHER =====
+            function renderWeather(weather) {
+                var tempEl = document.getElementById("weather-temp");
+                var condEl = document.getElementById("weather-condition");
+                var hiloEl = document.getElementById("weather-hilo");
+                var detailEl = document.getElementById("weather-details");
+                var forecastEl = document.getElementById("weather-forecast");
+
+                if (
+                    !weather ||
+                    weather.temp === null ||
+                    weather.temp === undefined
+                ) {
+                    tempEl.textContent = "--";
+                    condEl.textContent = "No data";
+                    hiloEl.textContent = "";
+                    detailEl.textContent = "";
+                    forecastEl.innerHTML = "";
+                    return;
+                }
+
+                tempEl.textContent = weather.temp + "\u00B0";
+                condEl.textContent =
+                    weather.description || weather.condition || "";
+
+                if (
+                    weather.tempMax !== undefined &&
+                    weather.tempMin !== undefined
+                ) {
+                    hiloEl.textContent =
+                        "H " +
+                        weather.tempMax +
+                        "\u00B0  L " +
+                        weather.tempMin +
+                        "\u00B0";
+                } else {
+                    hiloEl.textContent = "";
+                }
+
+                var details = [];
+                if (
+                    weather.humidity !== null &&
+                    weather.humidity !== undefined
+                ) {
+                    details.push(weather.humidity + "% humid");
+                }
+                if (weather.windSpeed) {
+                    details.push(
+                        "Wind " +
+                            weather.windSpeed +
+                            (weather.windDirection
+                                ? " " + weather.windDirection
+                                : ""),
+                    );
+                }
+                detailEl.textContent = details.join(" \u00B7 ");
+
+                forecastEl.innerHTML = "";
+                if (weather.forecast && weather.forecast.length > 0) {
+                    for (var f = 0; f < weather.forecast.length; f++) {
+                        var fc = weather.forecast[f];
+                        var cell = document.createElement("div");
+                        cell.className = "forecast-cell";
+                        cell.innerHTML =
+                            '<span class="forecast-name">' +
+                            fc.name +
+                            "</span>" +
+                            '<span class="forecast-temp">' +
+                            fc.temp +
+                            "\u00B0</span>";
+                        forecastEl.appendChild(cell);
+                    }
+                }
+            }
+
+            async function refreshData() {
+                try {
+                    const resp = await fetch("/api/all");
+                    const data = await resp.json();
+
+                    const eventsGrid = document.getElementById("events-grid");
+                    eventsGrid.innerHTML = "";
+
+                    if (data.calendar && data.calendar.length > 0) {
+                        const numCards = 4;
+
+                        data.calendar.slice(0, numCards).forEach((event) => {
+                            const card = createEventCard(event);
+                            eventsGrid.appendChild(card);
+                        });
+
+                        const futureList =
+                            document.getElementById("future-events-list");
+                        futureList.innerHTML = "";
+
+                        if (data.calendar.length > numCards) {
+                            data.calendar
+                                .slice(numCards)
+                                .forEach((event, index) => {
+                                    const row = createFutureEventRow(
+                                        event,
+                                        index + numCards + 1,
+                                    );
+                                    futureList.appendChild(row);
+                                });
+                        }
+                    }
+
+                    const busRows = document.getElementById("bus-rows");
+                    busRows.innerHTML = "";
+
+                    if (data.buses && data.buses.length > 0) {
+                        cachedBuses = data.buses; // Cache for next bus highlight
+                        updateNextBusHighlight(); // Update highlight immediately
+
+                        data.buses.slice(0, 10).forEach((bus) => {
+                            let timeStr;
+                            if (bus.status === "BRD") {
+                                timeStr = '<span class="boarding">BRD</span>';
+                            } else if (bus.status === "ARR") {
+                                timeStr = '<span class="arriving">ARR</span>';
+                            } else if (bus.minutes > 60) {
+                                // Show absolute arrival time for buses > 60 min away
+                                const arrivalTime = new Date(
+                                    Date.now() + bus.minutes * 60000,
+                                );
+                                const timeFormatted =
+                                    arrivalTime.toLocaleTimeString("en-GB", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        hour12: false,
+                                    });
+                                timeStr = `<span class="minutes">${timeFormatted}</span>`;
+                            } else {
+                                timeStr = `<span class="minutes">${bus.minutes}</span>`;
+                            }
+
+                            const row = document.createElement("div");
+                            row.className = "bus-row";
+                            const routeClass = `route route-${bus.route.toLowerCase()}`;
+                            const liveIcon = bus.isLive
+                                ? '<span class="live-icon"></span>'
+                                : "";
+                            row.innerHTML = `
               <span class="${routeClass}">${bus.route}</span>
               <span class="destination">${bus.destination}${liveIcon}</span>
               <span class="time">${timeStr}</span>
             `;
-              busRows.appendChild(row);
-          });
-        } else {
-          busRows.innerHTML = '<div class="no-data">no buses</div>';
-        }
+                            busRows.appendChild(row);
+                        });
+                    } else {
+                        busRows.innerHTML =
+                            '<div class="no-data">no buses</div>';
+                    }
 
-        if (data.spaceStatus) {
-          const statusMain = document.getElementById('status-main');
-          const statusCard = document.getElementById('status-card');
+                    if (data.spaceStatus) {
+                        const statusMain =
+                            document.getElementById("status-main");
+                        const statusCard =
+                            document.getElementById("status-card");
 
-          function formatTime24(dateObj) {
-            return dateObj.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-          }
+                        function formatTime24(dateObj) {
+                            return dateObj.toLocaleTimeString("en-GB", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                            });
+                        }
 
-          if (data.spaceStatus.open) {
-            statusCard.className = 'status-card open';
-            statusMain.textContent = 'SPACE OPEN';
+                        if (data.spaceStatus.open) {
+                            statusCard.className = "status-card open";
+                            statusMain.textContent = "SPACE OPEN";
 
-            // Show "Expires at: TIME" in bottom half
-            if (data.spaceStatus.closingTime) {
-              try {
-                var closeParsed = new Date(data.spaceStatus.closingTime.replace(',', ''));
-                if (!isNaN(closeParsed)) {
-                  document.getElementById('status-bottom').innerHTML =
-                    '<span class="status-bottom-label">Expires at:</span> <span class="status-bottom-time">' + formatTime24(closeParsed) + '</span>';
+                            // Show "Expires at: TIME" in bottom half
+                            if (data.spaceStatus.closingTime) {
+                                try {
+                                    var closeParsed = new Date(
+                                        data.spaceStatus.closingTime.replace(
+                                            ",",
+                                            "",
+                                        ),
+                                    );
+                                    if (!isNaN(closeParsed)) {
+                                        document.getElementById(
+                                            "status-bottom",
+                                        ).innerHTML =
+                                            '<span class="status-bottom-label">Expires at:</span> <span class="status-bottom-time">' +
+                                            formatTime24(closeParsed) +
+                                            "</span>";
+                                    }
+                                } catch (e) {
+                                    document.getElementById(
+                                        "status-bottom",
+                                    ).innerHTML =
+                                        '<span class="status-bottom-label">Expires at:</span> <span class="status-bottom-time">' +
+                                        data.spaceStatus.closingTime.replace(
+                                            /^\d{4}-\d{2}-\d{2},\s*/,
+                                            "",
+                                        ) +
+                                        "</span>";
+                                }
+                            }
+                        } else if (data.spaceStatus.closed) {
+                            statusCard.className = "status-card closed";
+                            statusMain.textContent = "CLOSED";
+
+                            // Show "Last opened: TIME" in bottom half
+                            if (
+                                data.spaceStatus.history &&
+                                data.spaceStatus.history.length > 0
+                            ) {
+                                var lastTime = data.spaceStatus.history[0].time;
+                                try {
+                                    var parsed = new Date(
+                                        lastTime.replace(",", ""),
+                                    );
+                                    if (!isNaN(parsed)) {
+                                        var now = new Date();
+                                        var isToday =
+                                            parsed.toDateString() ===
+                                            now.toDateString();
+                                        var timeStr = formatTime24(parsed);
+                                        var timeHtml;
+                                        if (isToday) {
+                                            timeHtml =
+                                                '<span class="status-bottom-time">' +
+                                                timeStr +
+                                                "</span>";
+                                        } else {
+                                            var yesterday = new Date(now);
+                                            yesterday.setDate(
+                                                yesterday.getDate() - 1,
+                                            );
+                                            var isYesterday =
+                                                parsed.toDateString() ===
+                                                yesterday.toDateString();
+                                            var prefix = isYesterday
+                                                ? "Yesterday"
+                                                : parsed.toLocaleDateString(
+                                                      "en-US",
+                                                      {
+                                                          weekday: "short",
+                                                          month: "short",
+                                                          day: "numeric",
+                                                      },
+                                                  );
+                                            timeHtml =
+                                                '<span class="status-bottom-time">' +
+                                                prefix +
+                                                " \u00B7 " +
+                                                timeStr +
+                                                "</span>";
+                                        }
+                                        document.getElementById(
+                                            "status-bottom",
+                                        ).innerHTML =
+                                            '<span class="status-bottom-label">Last opened:</span> ' +
+                                            timeHtml;
+                                    } else {
+                                        document.getElementById(
+                                            "status-bottom",
+                                        ).innerHTML =
+                                            '<span class="status-bottom-label">Last opened:</span> <span class="status-bottom-time">' +
+                                            lastTime +
+                                            "</span>";
+                                    }
+                                } catch (e) {
+                                    document.getElementById(
+                                        "status-bottom",
+                                    ).innerHTML =
+                                        '<span class="status-bottom-label">Last opened:</span> <span class="status-bottom-time">' +
+                                        lastTime +
+                                        "</span>";
+                                }
+                            }
+                        }
+                    }
+
+                    if (data.weather) renderWeather(data.weather);
+                    renderPrinters(data.printers);
+                } catch (err) {
+                    console.error("refresh error:", err);
                 }
-              } catch (e) {
-                document.getElementById('status-bottom').innerHTML =
-                  '<span class="status-bottom-label">Expires at:</span> <span class="status-bottom-time">' +
-                  data.spaceStatus.closingTime.replace(/^\d{4}-\d{2}-\d{2},\s*/, '') + '</span>';
-              }
             }
-          } else if (data.spaceStatus.closed) {
-            statusCard.className = 'status-card closed';
-            statusMain.textContent = 'CLOSED';
 
-            // Show "Last opened: TIME" in bottom half
-            if (data.spaceStatus.history && data.spaceStatus.history.length > 0) {
-              var lastTime = data.spaceStatus.history[0].time;
-              try {
-                var parsed = new Date(lastTime.replace(',', ''));
-                if (!isNaN(parsed)) {
-                  var now = new Date();
-                  var isToday = parsed.toDateString() === now.toDateString();
-                  var timeStr = formatTime24(parsed);
-                  var timeHtml;
-                  if (isToday) {
-                    timeHtml = '<span class="status-bottom-time">' + timeStr + '</span>';
-                  } else {
-                    var yesterday = new Date(now);
-                    yesterday.setDate(yesterday.getDate() - 1);
-                    var isYesterday = parsed.toDateString() === yesterday.toDateString();
-                    var prefix = isYesterday ? 'Yesterday' : parsed.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-                    timeHtml = '<span class="status-bottom-time">' + prefix + ' \u00B7 ' + timeStr + '</span>';
-                  }
-                  document.getElementById('status-bottom').innerHTML =
-                    '<span class="status-bottom-label">Last opened:</span> ' + timeHtml;
-                } else {
-                  document.getElementById('status-bottom').innerHTML =
-                    '<span class="status-bottom-label">Last opened:</span> <span class="status-bottom-time">' + lastTime + '</span>';
+            function renderPrinters(printers) {
+                const container = document.getElementById("printer-rows");
+                container.innerHTML = "";
+
+                if (!printers || Object.keys(printers).length === 0) {
+                    container.innerHTML =
+                        '<div class="no-data">no printers</div>';
+                    return;
                 }
-              } catch (e) {
-                document.getElementById('status-bottom').innerHTML =
-                  '<span class="status-bottom-label">Last opened:</span> <span class="status-bottom-time">' + lastTime + '</span>';
-              }
-            }
-          }
-        }
 
-        if (data.weather) renderWeather(data.weather);
-        renderPrinters(data.printers);
+                Object.entries(printers).forEach(([name, info]) => {
+                    const row = document.createElement("div");
+                    row.className = "printer-row";
 
-      } catch (err) {
-        console.error('refresh error:', err);
-      }
-    }
+                    const state = info.status || "unknown";
+                    const pct = Math.round(info.progress || 0);
+                    const isActive = pct > 0 && pct != 100;
+                    const stateClass = isActive
+                        ? "printer-state printing"
+                        : "printer-state";
 
-    function renderPrinters(printers) {
-      const container = document.getElementById('printer-rows');
-      container.innerHTML = '';
+                    const progressHtml = isActive
+                        ? `<div class="printer-progress-bar"><div class="printer-progress-fill" style="width:${pct}%"></div></div>`
+                        : "";
 
-      if (!printers || Object.keys(printers).length === 0) {
-        container.innerHTML = '<div class="no-data">no printers</div>';
-        return;
-      }
-
-      Object.entries(printers).forEach(([name, info]) => {
-        const row = document.createElement('div');
-        row.className = 'printer-row';
-
-        const state = info.status || 'unknown';
-        const isPrinting = /print/i.test(state);
-        const stateClass = isPrinting ? 'printer-state printing' : 'printer-state';
-
-        const pct = Math.round(info.progress || 0);
-        const progressHtml = isPrinting
-          ? `<div class="printer-progress-bar"><div class="printer-progress-fill" style="width:${pct}%"></div></div>`
-          : '';
-
-        row.innerHTML = `
+                    row.innerHTML = `
           <div class="printer-header">
             <span class="printer-name">${name}</span>
             <span class="${stateClass}">${state.toUpperCase()}</span>
           </div>
           ${progressHtml}
         `;
-        container.appendChild(row);
-      });
-    }
+                    container.appendChild(row);
+                });
+            }
 
-    function parseTags(title, description) {
-      const tags = [];
-      let cleanTitle = title || '';
-      let cleanDesc = description || '';
+            function parseTags(title, description) {
+                const tags = [];
+                let cleanTitle = title || "";
+                let cleanDesc = description || "";
 
-      // extract from title
-      if (cleanTitle) {
-        const titleMatches = cleanTitle.match(/\[([^\]]+)\]|\(([^)]+)\)/g) || [];
-        titleMatches.forEach(match => {
-          const tag = match.replace(/[\[\]()]/g, '');
-          const lower = tag.toLowerCase();
-          if (lower.includes('hybrid')) tags.push({ text: 'Hybrid', type: 'hybrid' });
-          else if (lower.includes('member')) tags.push({ text: 'Members only', type: 'members' });
-          cleanTitle = cleanTitle.replace(match, '').trim();
-        });
-      }
+                // extract from title
+                if (cleanTitle) {
+                    const titleMatches =
+                        cleanTitle.match(/\[([^\]]+)\]|\(([^)]+)\)/g) || [];
+                    titleMatches.forEach((match) => {
+                        const tag = match.replace(/[\[\]()]/g, "");
+                        const lower = tag.toLowerCase();
+                        if (lower.includes("hybrid"))
+                            tags.push({ text: "Hybrid", type: "hybrid" });
+                        else if (lower.includes("member"))
+                            tags.push({
+                                text: "Members only",
+                                type: "members",
+                            });
+                        cleanTitle = cleanTitle.replace(match, "").trim();
+                    });
+                }
 
-      // extract from description
-      if (cleanDesc && cleanDesc.toLowerCase().includes('open to the public')) {
-        tags.push({ text: 'Public', type: 'public' });
-        cleanDesc = cleanDesc.replace(/\[?open to the public\]?/gi, '').trim();
-      }
+                // extract from description
+                if (
+                    cleanDesc &&
+                    cleanDesc.toLowerCase().includes("open to the public")
+                ) {
+                    tags.push({ text: "Public", type: "public" });
+                    cleanDesc = cleanDesc
+                        .replace(/\[?open to the public\]?/gi, "")
+                        .trim();
+                }
 
-      return { tags, cleanTitle, cleanDesc };
-    }
+                return { tags, cleanTitle, cleanDesc };
+            }
 
-    function createEventCard(event) {
-      const card = document.createElement('div');
-      card.className = 'card card-event';
-      
-      const now = new Date();
-      const startTime = new Date(event.start);
-      const endTime = event.end ? new Date(event.end) : null;
-      
-      const isLive = startTime <= now && (!endTime || endTime >= now);
-      const isNext = !isLive && startTime > now && (startTime - now) < 3600000;
-      
-      if (isLive) card.classList.add('live');
-      
-      const dateStr = startTime.toLocaleDateString('en-US', { 
-        weekday: 'long',
-        month: 'short',
-        day: 'numeric'
-      });
-      
-      const timeStr = startTime.toLocaleTimeString('en-GB', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: false 
-      });
-      
-      let endTimeStr = '';
-      if (endTime) {
-        endTimeStr = '–' + endTime.toLocaleTimeString('en-GB', { 
-          hour: '2-digit', 
-          minute: '2-digit',
-          hour12: false 
-        });
-      }
-      
-      const { tags, cleanTitle, cleanDesc } = parseTags(event.title, event.description);
+            function createEventCard(event) {
+                const card = document.createElement("div");
+                card.className = "card card-event";
 
-      if (isNext) tags.unshift({ text: 'Next', type: 'next' });
+                const now = new Date();
+                const startTime = new Date(event.start);
+                const endTime = event.end ? new Date(event.end) : null;
 
-      const isCancelled = event.status === 'cancelled' || event.title.includes('CANCELLED');
-      if (isCancelled) {
-        card.classList.add('cancelled');
-      }
+                const isLive = startTime <= now && (!endTime || endTime >= now);
+                const isNext =
+                    !isLive && startTime > now && startTime - now < 3600000;
 
-      let desc = cleanDesc || '';
-      if (desc) {
-        const maxLen = 120;
-        desc = stripHtml(desc);
-        desc = desc.length > maxLen ? desc.substring(0, maxLen) + '...' : desc;
-      } else {
-        card.classList.add('no-description');
-      }
+                if (isLive) card.classList.add("live");
 
-      let tagsHtml = '';
-      if (tags.length > 0) {
-        const tagElements = tags.map(tag =>
-          `<div class="tag tag-${tag.type}">${tag.text}</div>`
-        ).join('');
-        tagsHtml = `<div class="event-tags">${tagElements}</div>`;
-      }
+                const dateStr = startTime.toLocaleDateString("en-US", {
+                    weekday: "long",
+                    month: "short",
+                    day: "numeric",
+                });
 
-      let cancelledBadge = '';
-      if (isCancelled) {
-        cancelledBadge = '<div class="badge">CANCELLED</div>';
-      }
+                const timeStr = startTime.toLocaleTimeString("en-GB", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                });
 
-      // Different HTML structure for horizontal vs vertical layouts
-      const isHorizontal = ROTATION_CONFIG && ROTATION_CONFIG.experiments.horizontalCards;
+                let endTimeStr = "";
+                if (endTime) {
+                    endTimeStr =
+                        "–" +
+                        endTime.toLocaleTimeString("en-GB", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: false,
+                        });
+                }
 
-      if (isHorizontal) {
-        card.innerHTML = `
+                const { tags, cleanTitle, cleanDesc } = parseTags(
+                    event.title,
+                    event.description,
+                );
+
+                if (isNext) tags.unshift({ text: "Next", type: "next" });
+
+                const isCancelled =
+                    event.status === "cancelled" ||
+                    event.title.includes("CANCELLED");
+                if (isCancelled) {
+                    card.classList.add("cancelled");
+                }
+
+                let desc = cleanDesc || "";
+                if (desc) {
+                    const maxLen = 120;
+                    desc = stripHtml(desc);
+                    desc =
+                        desc.length > maxLen
+                            ? desc.substring(0, maxLen) + "..."
+                            : desc;
+                } else {
+                    card.classList.add("no-description");
+                }
+
+                let tagsHtml = "";
+                if (tags.length > 0) {
+                    const tagElements = tags
+                        .map(
+                            (tag) =>
+                                `<div class="tag tag-${tag.type}">${tag.text}</div>`,
+                        )
+                        .join("");
+                    tagsHtml = `<div class="event-tags">${tagElements}</div>`;
+                }
+
+                let cancelledBadge = "";
+                if (isCancelled) {
+                    cancelledBadge = '<div class="badge">CANCELLED</div>';
+                }
+
+                // Different HTML structure for horizontal vs vertical layouts
+                const isHorizontal =
+                    ROTATION_CONFIG &&
+                    ROTATION_CONFIG.experiments.horizontalCards;
+
+                if (isHorizontal) {
+                    card.innerHTML = `
           <div class="event-content">
             <div class="event-time-date-group">
               <div class="event-time">${timeStr}${endTimeStr}</div>
@@ -525,150 +679,181 @@
               <div class="event-title">${stripHtml(cleanTitle)}</div>
             </div>
             <div class="event-main-content">
-              ${desc ? `<div class="event-desc">${desc}</div>` : ''}
+              ${desc ? `<div class="event-desc">${desc}</div>` : ""}
             </div>
           </div>
           ${tagsHtml}
           ${cancelledBadge}
         `;
-      } else {
-        card.innerHTML = `
+                } else {
+                    card.innerHTML = `
           <div class="event-content">
             <div class="event-time">${timeStr}${endTimeStr}</div>
             <div class="event-date">${dateStr}</div>
             <div class="event-title">${stripHtml(cleanTitle)}</div>
-            ${desc ? `<div class="event-desc">${desc}</div>` : ''}
+            ${desc ? `<div class="event-desc">${desc}</div>` : ""}
           </div>
           ${tagsHtml}
           ${cancelledBadge}
         `;
-      }
-      
-      return card;
-    }
-    
-    function createFutureEventRow(event, number) {
-      const row = document.createElement('div');
-      row.className = 'future-event-row';
+                }
 
-      const startTime = new Date(event.start);
-      const dateStr = startTime.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric'
-      });
-      const timeStr = startTime.toLocaleTimeString('en-GB', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      });
+                return card;
+            }
 
-      const { cleanTitle } = parseTags(event.title, event.description);
+            function createFutureEventRow(event, number) {
+                const row = document.createElement("div");
+                row.className = "future-event-row";
 
-      const isCancelled = event.status === 'cancelled' || event.title.includes('CANCELLED');
-      const titleClass = isCancelled ? 'future-title cancelled-text' : 'future-title';
+                const startTime = new Date(event.start);
+                const dateStr = startTime.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                });
+                const timeStr = startTime.toLocaleTimeString("en-GB", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                });
 
-      row.innerHTML = `
+                const { cleanTitle } = parseTags(
+                    event.title,
+                    event.description,
+                );
+
+                const isCancelled =
+                    event.status === "cancelled" ||
+                    event.title.includes("CANCELLED");
+                const titleClass = isCancelled
+                    ? "future-title cancelled-text"
+                    : "future-title";
+
+                row.innerHTML = `
         <span class="future-number">${number}.</span>
         <span class="future-date">${dateStr}</span>
         <span class="future-time">${timeStr}</span>
         <span class="${titleClass}">${stripHtml(cleanTitle)}</span>
       `;
 
-      return row;
-    }
+                return row;
+            }
 
-    function rotateCards() {
-      if (!ROTATION_CONFIG || !ROTATION_CONFIG.enabled || ROTATION_CONFIG.cardTypes.length <= 1) return;
+            function rotateCards() {
+                if (
+                    !ROTATION_CONFIG ||
+                    !ROTATION_CONFIG.enabled ||
+                    ROTATION_CONFIG.cardTypes.length <= 1
+                )
+                    return;
 
-      ROTATION_CONFIG.currentIndex = (ROTATION_CONFIG.currentIndex + 1) % ROTATION_CONFIG.cardTypes.length;
-      rotationStartTime = Date.now();
-      updateIndicators();
-      refreshData(); // refresh to show new card type
-    }
+                ROTATION_CONFIG.currentIndex =
+                    (ROTATION_CONFIG.currentIndex + 1) %
+                    ROTATION_CONFIG.cardTypes.length;
+                rotationStartTime = Date.now();
+                updateIndicators();
+                refreshData(); // refresh to show new card type
+            }
 
-    // Auto-scroll future events
-    let futureEventsScrollIndex = 0;
-    function scrollFutureEvents() {
-      const list = document.getElementById('future-events-list');
-      const rows = list.querySelectorAll('.future-event-row');
-      const container = list.parentElement;
-      const containerHeight = container.clientHeight;
-      const rowHeight = rows[0] ? rows[0].offsetHeight : 30;
-      const visibleRows = Math.floor(containerHeight / rowHeight);
+            // Auto-scroll future events
+            let futureEventsScrollIndex = 0;
+            function scrollFutureEvents() {
+                const list = document.getElementById("future-events-list");
+                const rows = list.querySelectorAll(".future-event-row");
+                const container = list.parentElement;
+                const containerHeight = container.clientHeight;
+                const rowHeight = rows[0] ? rows[0].offsetHeight : 30;
+                const visibleRows = Math.floor(containerHeight / rowHeight);
 
-      if (rows.length <= visibleRows) {
-        list.style.transform = 'translateY(0)';
-        futureEventsScrollIndex = 0;
-        return;
-      }
+                if (rows.length <= visibleRows) {
+                    list.style.transform = "translateY(0)";
+                    futureEventsScrollIndex = 0;
+                    return;
+                }
 
-      const maxScroll = rows.length - visibleRows;
-      futureEventsScrollIndex = (futureEventsScrollIndex + 1) % (maxScroll + 1);
-      list.style.transform = `translateY(-${futureEventsScrollIndex * rowHeight}px)`;
-    }
+                const maxScroll = rows.length - visibleRows;
+                futureEventsScrollIndex =
+                    (futureEventsScrollIndex + 1) % (maxScroll + 1);
+                list.style.transform = `translateY(-${futureEventsScrollIndex * rowHeight}px)`;
+            }
 
-    // Next bus highlight rotation
-    let nextBusIndex = 0;
-    let cachedBuses = [];
+            // Next bus highlight rotation
+            let nextBusIndex = 0;
+            let cachedBuses = [];
 
-    function updateNextBusHighlight() {
-      if (!ROTATION_CONFIG || !ROTATION_CONFIG.experiments.nextBusHighlight || cachedBuses.length === 0) {
-        return;
-      }
+            function updateNextBusHighlight() {
+                if (
+                    !ROTATION_CONFIG ||
+                    !ROTATION_CONFIG.experiments.nextBusHighlight ||
+                    cachedBuses.length === 0
+                ) {
+                    return;
+                }
 
-      const highlight = document.getElementById('next-bus-highlight');
-      const bus = cachedBuses[nextBusIndex];
+                const highlight = document.getElementById("next-bus-highlight");
+                const bus = cachedBuses[nextBusIndex];
 
-      let timeText;
-      if (bus.status === 'BRD') {
-        timeText = 'BOARDING';
-      } else if (bus.status === 'ARR') {
-        timeText = 'ARRIVING';
-      } else if (bus.minutes > 60) {
-        const arrivalTime = new Date(Date.now() + bus.minutes * 60000);
-        timeText = 'at ' + arrivalTime.toLocaleTimeString('en-GB', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false
-        });
-      } else {
-        timeText = `${bus.minutes} min`;
-      }
+                let timeText;
+                if (bus.status === "BRD") {
+                    timeText = "BOARDING";
+                } else if (bus.status === "ARR") {
+                    timeText = "ARRIVING";
+                } else if (bus.minutes > 60) {
+                    const arrivalTime = new Date(
+                        Date.now() + bus.minutes * 60000,
+                    );
+                    timeText =
+                        "at " +
+                        arrivalTime.toLocaleTimeString("en-GB", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: false,
+                        });
+                } else {
+                    timeText = `${bus.minutes} min`;
+                }
 
-      highlight.innerHTML = `
+                highlight.innerHTML = `
         <div class="route-badge">${bus.route}</div>
         <div class="destination-text">TO ${bus.destination.toUpperCase()}</div>
         <div class="time-text">${timeText}</div>
       `;
 
-      nextBusIndex = (nextBusIndex + 1) % Math.min(3, cachedBuses.length);
-    }
+                nextBusIndex =
+                    (nextBusIndex + 1) % Math.min(3, cachedBuses.length);
+            }
 
-    // Initialize everything
-    async function init() {
-      await loadConfig();
+            // Initialize everything
+            async function init() {
+                await loadConfig();
 
-      // Set up rotation interval if enabled
-      if (ROTATION_CONFIG && ROTATION_CONFIG.enabled && ROTATION_CONFIG.cardTypes.length > 1) {
-        rotationStartTime = Date.now();
-        setInterval(rotateCards, ROTATION_CONFIG.interval);
-        // Update progress bar more frequently for smooth animation
-        setInterval(updateIndicators, 100);
-      }
+                // Set up rotation interval if enabled
+                if (
+                    ROTATION_CONFIG &&
+                    ROTATION_CONFIG.enabled &&
+                    ROTATION_CONFIG.cardTypes.length > 1
+                ) {
+                    rotationStartTime = Date.now();
+                    setInterval(rotateCards, ROTATION_CONFIG.interval);
+                    // Update progress bar more frequently for smooth animation
+                    setInterval(updateIndicators, 100);
+                }
 
-      // Auto-scroll future events every 5 seconds
-      setInterval(scrollFutureEvents, 5000);
+                // Auto-scroll future events every 5 seconds
+                setInterval(scrollFutureEvents, 5000);
 
-      // Rotate next bus highlight every 4 seconds
-      if (ROTATION_CONFIG && ROTATION_CONFIG.experiments.nextBusHighlight) {
-        setInterval(updateNextBusHighlight, 4000);
-      }
+                // Rotate next bus highlight every 4 seconds
+                if (
+                    ROTATION_CONFIG &&
+                    ROTATION_CONFIG.experiments.nextBusHighlight
+                ) {
+                    setInterval(updateNextBusHighlight, 4000);
+                }
 
-      setInterval(refreshData, 30000);
-      refreshData();
-    }
+                setInterval(refreshData, 30000);
+                refreshData();
+            }
 
-    init();
-  </script>
-</body>
+            init();
+        </script>
+    </body>
 </html>
