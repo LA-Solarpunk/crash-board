@@ -541,11 +541,11 @@
                     const displayState =
                         state === "Printing"
                             ? `${Math.round(info.time_remaining / 60)}m remaining`
-                            : state.toUpperCase();
+                            : state;
                     row.innerHTML = `
           <div class="printer-header">
             <span class="printer-name">${name}</span>
-            <span class="${stateClass}">${displayState}</span>
+            <span class="${stateClass}">${displayState.toUpperCase()}</span>
           </div>
           ${progressHtml}
         `;
