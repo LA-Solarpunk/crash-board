@@ -93,13 +93,28 @@
                 return div.textContent || div.innerText || "";
             }
 
+            function formatTime24(dateObj) {
+                return dateObj.toLocaleTimeString("en-GB", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                });
+            }
+
+            function isCancelled(event) {
+                return (
+                    event.status === "cancelled" ||
+                    event.title.includes("CANCELLED")
+                );
+            }
+
             // ===== WEATHER =====
             function renderWeather(weather) {
-                var tempEl = document.getElementById("weather-temp");
-                var condEl = document.getElementById("weather-condition");
-                var hiloEl = document.getElementById("weather-hilo");
-                var detailEl = document.getElementById("weather-details");
-                var forecastEl = document.getElementById("weather-forecast");
+                const tempEl = document.getElementById("weather-temp");
+                const condEl = document.getElementById("weather-condition");
+                const hiloEl = document.getElementById("weather-hilo");
+                const detailEl = document.getElementById("weather-details");
+                const forecastEl = document.getElementById("weather-forecast");
 
                 if (
                     !weather ||
@@ -152,9 +167,9 @@
 
                 forecastEl.innerHTML = "";
                 if (weather.forecast && weather.forecast.length > 0) {
-                    for (var f = 0; f < weather.forecast.length; f++) {
-                        var fc = weather.forecast[f];
-                        var cell = document.createElement("div");
+                    for (let f = 0; f < weather.forecast.length; f++) {
+                        const fc = weather.forecast[f];
+                        const cell = document.createElement("div");
                         cell.className = "forecast-cell";
                         cell.innerHTML =
                             '<span class="forecast-name">' +
@@ -219,13 +234,7 @@
                                 const arrivalTime = new Date(
                                     Date.now() + bus.minutes * 60000,
                                 );
-                                const timeFormatted =
-                                    arrivalTime.toLocaleTimeString("en-GB", {
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                        hour12: false,
-                                    });
-                                timeStr = `<span class="minutes">${timeFormatted}</span>`;
+                                timeStr = `<span class="minutes">${formatTime24(arrivalTime)}</span>`;
                             } else {
                                 timeStr = `<span class="minutes">${bus.minutes}</span>`;
                             }
@@ -254,43 +263,20 @@
                         const statusCard =
                             document.getElementById("status-card");
 
-                        function formatTime24(dateObj) {
-                            return dateObj.toLocaleTimeString("en-GB", {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                            });
-                        }
-
                         if (data.spaceStatus.open) {
                             statusCard.className = "status-card open";
                             statusMain.textContent = "SPACE OPEN";
 
-                            // Show "Expires at: TIME" in bottom half
                             if (data.spaceStatus.closingTime) {
-                                try {
-                                    var closeParsed = new Date(
-                                        data.spaceStatus.closingTime.replace(
-                                            ",",
-                                            "",
-                                        ),
-                                    );
-                                    if (!isNaN(closeParsed)) {
-                                        document.getElementById(
-                                            "status-bottom",
-                                        ).innerHTML =
-                                            '<span class="status-bottom-label">Expires at:</span> <span class="status-bottom-time">' +
-                                            formatTime24(closeParsed) +
-                                            "</span>";
-                                    }
-                                } catch (e) {
+                                const closeParsed = new Date(
+                                    data.spaceStatus.closingTime.replace(",", ""),
+                                );
+                                if (!isNaN(closeParsed)) {
                                     document.getElementById(
                                         "status-bottom",
                                     ).innerHTML =
                                         '<span class="status-bottom-label">Expires at:</span> <span class="status-bottom-time">' +
-                                        data.spaceStatus.closingTime.replace(
-                                            /^\d{4}-\d{2}-\d{2},\s*/,
-                                            "",
-                                        ) +
+                                        formatTime24(closeParsed) +
                                         "</span>";
                                 }
                             }
@@ -298,67 +284,58 @@
                             statusCard.className = "status-card closed";
                             statusMain.textContent = "CLOSED";
 
-                            // Show "Last opened: TIME" in bottom half
                             if (
                                 data.spaceStatus.history &&
                                 data.spaceStatus.history.length > 0
                             ) {
-                                var lastTime = data.spaceStatus.history[0].time;
-                                try {
-                                    var parsed = new Date(
-                                        lastTime.replace(",", ""),
-                                    );
-                                    if (!isNaN(parsed)) {
-                                        var now = new Date();
-                                        var isToday =
-                                            parsed.toDateString() ===
-                                            now.toDateString();
-                                        var timeStr = formatTime24(parsed);
-                                        var timeHtml;
-                                        if (isToday) {
-                                            timeHtml =
-                                                '<span class="status-bottom-time">' +
-                                                timeStr +
-                                                "</span>";
-                                        } else {
-                                            var yesterday = new Date(now);
-                                            yesterday.setDate(
-                                                yesterday.getDate() - 1,
-                                            );
-                                            var isYesterday =
-                                                parsed.toDateString() ===
-                                                yesterday.toDateString();
-                                            var prefix = isYesterday
-                                                ? "Yesterday"
-                                                : parsed.toLocaleDateString(
-                                                      "en-US",
-                                                      {
-                                                          weekday: "short",
-                                                          month: "short",
-                                                          day: "numeric",
-                                                      },
-                                                  );
-                                            timeHtml =
-                                                '<span class="status-bottom-time">' +
-                                                prefix +
-                                                " \u00B7 " +
-                                                timeStr +
-                                                "</span>";
-                                        }
-                                        document.getElementById(
-                                            "status-bottom",
-                                        ).innerHTML =
-                                            '<span class="status-bottom-label">Last opened:</span> ' +
-                                            timeHtml;
+                                const lastTime =
+                                    data.spaceStatus.history[0].time;
+                                const parsed = new Date(
+                                    lastTime.replace(",", ""),
+                                );
+                                if (!isNaN(parsed)) {
+                                    const now = new Date();
+                                    const isToday =
+                                        parsed.toDateString() ===
+                                        now.toDateString();
+                                    const timeStr = formatTime24(parsed);
+                                    let timeHtml;
+                                    if (isToday) {
+                                        timeHtml =
+                                            '<span class="status-bottom-time">' +
+                                            timeStr +
+                                            "</span>";
                                     } else {
-                                        document.getElementById(
-                                            "status-bottom",
-                                        ).innerHTML =
-                                            '<span class="status-bottom-label">Last opened:</span> <span class="status-bottom-time">' +
-                                            lastTime +
+                                        const yesterday = new Date(now);
+                                        yesterday.setDate(
+                                            yesterday.getDate() - 1,
+                                        );
+                                        const isYesterday =
+                                            parsed.toDateString() ===
+                                            yesterday.toDateString();
+                                        const prefix = isYesterday
+                                            ? "Yesterday"
+                                            : parsed.toLocaleDateString(
+                                                  "en-US",
+                                                  {
+                                                      weekday: "short",
+                                                      month: "short",
+                                                      day: "numeric",
+                                                  },
+                                              );
+                                        timeHtml =
+                                            '<span class="status-bottom-time">' +
+                                            prefix +
+                                            " \u00B7 " +
+                                            timeStr +
                                             "</span>";
                                     }
-                                } catch (e) {
+                                    document.getElementById(
+                                        "status-bottom",
+                                    ).innerHTML =
+                                        '<span class="status-bottom-label">Last opened:</span> ' +
+                                        timeHtml;
+                                } else {
                                     document.getElementById(
                                         "status-bottom",
                                     ).innerHTML =
@@ -474,21 +451,11 @@
                     day: "numeric",
                 });
 
-                const timeStr = startTime.toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false,
-                });
+                const timeStr = formatTime24(startTime);
 
                 let endTimeStr = "";
                 if (endTime) {
-                    endTimeStr =
-                        "–" +
-                        endTime.toLocaleTimeString("en-GB", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            hour12: false,
-                        });
+                    endTimeStr = "–" + formatTime24(endTime);
                 }
 
                 const { tags, cleanTitle, cleanDesc } = parseTags(
@@ -498,10 +465,8 @@
 
                 if (isNext) tags.unshift({ text: "Next", type: "next" });
 
-                const isCancelled =
-                    event.status === "cancelled" ||
-                    event.title.includes("CANCELLED");
-                if (isCancelled) {
+                const cancelled = isCancelled(event);
+                if (cancelled) {
                     card.classList.add("cancelled");
                 }
 
@@ -529,7 +494,7 @@
                 }
 
                 let cancelledBadge = "";
-                if (isCancelled) {
+                if (cancelled) {
                     cancelledBadge = '<div class="badge">CANCELLED</div>';
                 }
 
@@ -556,18 +521,11 @@
                     month: "short",
                     day: "numeric",
                 });
-                const timeStr = startTime.toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false,
-                });
+                const timeStr = formatTime24(startTime);
 
                 const { cleanTitle } = parseTags(event.title);
 
-                const isCancelled =
-                    event.status === "cancelled" ||
-                    event.title.includes("CANCELLED");
-                const titleClass = isCancelled
+                const titleClass = isCancelled(event)
                     ? "future-title cancelled-text"
                     : "future-title";
 
@@ -622,13 +580,7 @@
                     const arrivalTime = new Date(
                         Date.now() + bus.minutes * 60000,
                     );
-                    timeText =
-                        "at " +
-                        arrivalTime.toLocaleTimeString("en-GB", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            hour12: false,
-                        });
+                    timeText = "at " + formatTime24(arrivalTime);
                 } else {
                     timeText = `${bus.minutes} min`;
                 }
