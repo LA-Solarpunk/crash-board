@@ -12,17 +12,8 @@
         />
         <link rel="stylesheet" href="style.css" />
     </head>
-    <body>
+    <body class="next-bus-highlight-enabled">
         <div class="top-row">
-            <div class="rotation-indicators" id="rotation-indicators">
-                <div class="rotation-dots" id="rotation-dots"></div>
-                <div class="rotation-progress" id="rotation-progress">
-                    <div
-                        class="rotation-progress-bar"
-                        id="rotation-progress-bar"
-                    ></div>
-                </div>
-            </div>
             <div class="events-grid" id="events-grid"></div>
             <div class="card card-printers" id="printers-card">
                 <div class="card-title">3D PRINTERS</div>
@@ -63,9 +54,7 @@
                 </div>
                 <div class="status-bottom" id="status-bottom">
                     <span class="status-bottom-label">Last opened:</span>
-                    <span class="status-bottom-time" id="status-bottom-time"
-                        >—</span
-                    >
+                    <span class="status-bottom-time">—</span>
                 </div>
             </div>
         </div>
@@ -78,131 +67,6 @@
         </div>
 
         <script>
-            // === CARD ROTATION CONFIG ===
-            let ROTATION_CONFIG = null;
-            let rotationProgress = 0;
-            let rotationStartTime = 0;
-
-            // Load config from JSON file
-            async function loadConfig() {
-                try {
-                    const resp = await fetch("/cards-config.json");
-                    const config = await resp.json();
-                    ROTATION_CONFIG = {
-                        enabled: config.rotation.enabled,
-                        interval: config.rotation.interval,
-                        positions: config.rotation.positions,
-                        cardTypes: config.cardTypes,
-                        currentIndex: 0,
-                        indicators: config.rotation.indicators,
-                        experiments: config.experiments || {},
-                    };
-
-                    // Apply experimental features
-                    if (ROTATION_CONFIG.experiments.largerBusText) {
-                        document.body.classList.add("larger-bus-text");
-                    }
-
-                    if (ROTATION_CONFIG.experiments.swapBusesAndFuture) {
-                        document.body.classList.add("swap-buses-future");
-                    }
-
-                    if (ROTATION_CONFIG.experiments.nextBusHighlight) {
-                        document.body.classList.add(
-                            "next-bus-highlight-enabled",
-                        );
-                    }
-
-                    if (ROTATION_CONFIG.experiments.horizontalCards) {
-                        document.body.classList.add("horizontal-cards");
-                    }
-
-                    initializeIndicators();
-                } catch (err) {
-                    console.error("Failed to load cards config:", err);
-                    // Fallback to default config
-                    ROTATION_CONFIG = {
-                        enabled: false,
-                        interval: 30000,
-                        positions: [4, 5, 6],
-                        cardTypes: [
-                            { type: "events", count: 3 },
-                            { type: "buses", count: 1 },
-                        ],
-                        currentIndex: 0,
-                        indicators: { dots: true, progressBar: true },
-                        experiments: {},
-                    };
-                }
-            }
-
-            function initializeIndicators() {
-                if (
-                    !ROTATION_CONFIG.enabled ||
-                    ROTATION_CONFIG.cardTypes.length <= 1
-                ) {
-                    document
-                        .getElementById("rotation-indicators")
-                        .classList.remove("active");
-                    return;
-                }
-
-                const container = document.getElementById(
-                    "rotation-indicators",
-                );
-                container.classList.add("active");
-
-                // Initialize dots
-                if (ROTATION_CONFIG.indicators.dots) {
-                    const dotsContainer =
-                        document.getElementById("rotation-dots");
-                    dotsContainer.innerHTML = "";
-                    ROTATION_CONFIG.cardTypes.forEach((card, index) => {
-                        const dot = document.createElement("div");
-                        dot.className = "rotation-dot";
-                        if (index === 0) dot.classList.add("active");
-                        dotsContainer.appendChild(dot);
-                    });
-                }
-
-                // Show/hide progress bar
-                const progressBar =
-                    document.getElementById("rotation-progress");
-                if (ROTATION_CONFIG.indicators.progressBar) {
-                    progressBar.style.display = "block";
-                } else {
-                    progressBar.style.display = "none";
-                }
-            }
-
-            function updateIndicators() {
-                if (!ROTATION_CONFIG || !ROTATION_CONFIG.enabled) return;
-
-                // Update dots
-                if (ROTATION_CONFIG.indicators.dots) {
-                    const dots = document.querySelectorAll(".rotation-dot");
-                    dots.forEach((dot, index) => {
-                        if (index === ROTATION_CONFIG.currentIndex) {
-                            dot.classList.add("active");
-                        } else {
-                            dot.classList.remove("active");
-                        }
-                    });
-                }
-
-                // Update progress bar
-                if (ROTATION_CONFIG.indicators.progressBar) {
-                    const elapsed = Date.now() - rotationStartTime;
-                    const progress = Math.min(
-                        (elapsed / ROTATION_CONFIG.interval) * 100,
-                        100,
-                    );
-                    document.getElementById(
-                        "rotation-progress-bar",
-                    ).style.width = progress + "%";
-                }
-            }
-
             function updateClock() {
                 const now = new Date();
                 const timeStr = now.toLocaleTimeString("en-GB", {
@@ -669,28 +533,7 @@
                     cancelledBadge = '<div class="badge">CANCELLED</div>';
                 }
 
-                // Different HTML structure for horizontal vs vertical layouts
-                const isHorizontal =
-                    ROTATION_CONFIG &&
-                    ROTATION_CONFIG.experiments.horizontalCards;
-
-                if (isHorizontal) {
-                    card.innerHTML = `
-          <div class="event-content">
-            <div class="event-time-date-group">
-              <div class="event-time">${timeStr}${endTimeStr}</div>
-              <div class="event-date">${dateStr}</div>
-              <div class="event-title">${stripHtml(cleanTitle)}</div>
-            </div>
-            <div class="event-main-content">
-              ${desc ? `<div class="event-desc">${desc}</div>` : ""}
-            </div>
-          </div>
-          ${tagsHtml}
-          ${cancelledBadge}
-        `;
-                } else {
-                    card.innerHTML = `
+                card.innerHTML = `
           <div class="event-content">
             <div class="event-time">${timeStr}${endTimeStr}</div>
             <div class="event-date">${dateStr}</div>
@@ -700,7 +543,6 @@
           ${tagsHtml}
           ${cancelledBadge}
         `;
-                }
 
                 return card;
             }
@@ -720,10 +562,7 @@
                     hour12: false,
                 });
 
-                const { cleanTitle } = parseTags(
-                    event.title,
-                    event.description,
-                );
+                const { cleanTitle } = parseTags(event.title);
 
                 const isCancelled =
                     event.status === "cancelled" ||
@@ -740,22 +579,6 @@
       `;
 
                 return row;
-            }
-
-            function rotateCards() {
-                if (
-                    !ROTATION_CONFIG ||
-                    !ROTATION_CONFIG.enabled ||
-                    ROTATION_CONFIG.cardTypes.length <= 1
-                )
-                    return;
-
-                ROTATION_CONFIG.currentIndex =
-                    (ROTATION_CONFIG.currentIndex + 1) %
-                    ROTATION_CONFIG.cardTypes.length;
-                rotationStartTime = Date.now();
-                updateIndicators();
-                refreshData(); // refresh to show new card type
             }
 
             // Auto-scroll future events
@@ -785,13 +608,7 @@
             let cachedBuses = [];
 
             function updateNextBusHighlight() {
-                if (
-                    !ROTATION_CONFIG ||
-                    !ROTATION_CONFIG.experiments.nextBusHighlight ||
-                    cachedBuses.length === 0
-                ) {
-                    return;
-                }
+                if (cachedBuses.length === 0) return;
 
                 const highlight = document.getElementById("next-bus-highlight");
                 const bus = cachedBuses[nextBusIndex];
@@ -827,31 +644,12 @@
             }
 
             // Initialize everything
-            async function init() {
-                await loadConfig();
-
-                // Set up rotation interval if enabled
-                if (
-                    ROTATION_CONFIG &&
-                    ROTATION_CONFIG.enabled &&
-                    ROTATION_CONFIG.cardTypes.length > 1
-                ) {
-                    rotationStartTime = Date.now();
-                    setInterval(rotateCards, ROTATION_CONFIG.interval);
-                    // Update progress bar more frequently for smooth animation
-                    setInterval(updateIndicators, 100);
-                }
-
+            function init() {
                 // Auto-scroll future events every 5 seconds
                 setInterval(scrollFutureEvents, 5000);
 
                 // Rotate next bus highlight every 4 seconds
-                if (
-                    ROTATION_CONFIG &&
-                    ROTATION_CONFIG.experiments.nextBusHighlight
-                ) {
-                    setInterval(updateNextBusHighlight, 4000);
-                }
+                setInterval(updateNextBusHighlight, 4000);
 
                 setInterval(refreshData, 30000);
                 refreshData();
