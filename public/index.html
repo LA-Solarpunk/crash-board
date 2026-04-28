@@ -348,10 +348,33 @@
                     }
 
                     if (data.weather) renderWeather(data.weather);
+                    cachedPrinterData = data.printers;
                     renderPrinters(data.printers);
                 } catch (err) {
                     console.error("refresh error:", err);
                 }
+            }
+
+            // Printer rotation state
+            let printerRotationPhase = 0; // toggles 0/1 every few seconds
+
+            function getPrinterType(info) {
+                if (info.prusa) return "Prusa";
+                if (info.bambu) return "Bambu";
+                return "";
+            }
+
+            function formatTimeRemaining(seconds) {
+                if (!seconds || seconds <= 0) return "00:00";
+                const h = Math.floor(seconds / 3600);
+                const m = Math.floor((seconds % 3600) / 60);
+                return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
+            }
+
+            function formatETA(seconds) {
+                if (!seconds || seconds <= 0) return "--:--";
+                const eta = new Date(Date.now() + seconds * 1000);
+                return formatTime24(eta);
             }
 
             function renderPrinters(printers) {
@@ -364,35 +387,77 @@
                     return;
                 }
 
-                Object.entries(printers).forEach(([name, info]) => {
-                    const row = document.createElement("div");
-                    row.className = "printer-row";
+                // Sort: active printers first (by time_remaining asc), then idle/finished/error
+                const entries = Object.entries(printers).sort(([, a], [, b]) => {
+                    const aActive = a.status === "Printing";
+                    const bActive = b.status === "Printing";
+                    if (aActive && !bActive) return -1;
+                    if (!aActive && bActive) return 1;
+                    if (aActive && bActive) return (a.time_remaining || 0) - (b.time_remaining || 0);
+                    return 0;
+                });
 
-                    const state = info.status || "unknown";
-                    const pct = Math.round(info.progress || 0);
-                    const isActive = pct > 0 && pct != 100;
-                    const stateClass = isActive
-                        ? "printer-state printing"
-                        : "printer-state";
+                entries.forEach(([name, info]) => {
+                    const status = info.status || "unknown";
+                    const type = getPrinterType(info);
+                    const isActive = status === "Printing";
+                    const isError = status.toLowerCase().includes("error");
+                    const isFinished = status === "Finished";
 
-                    const progressHtml = isActive
-                        ? `<div class="printer-progress-bar"><div class="printer-progress-fill" style="width:${pct}%"></div></div>`
-                        : "";
+                    if (isActive) {
+                        // Active printer card
+                        const pct = Math.round(info.progress || 0);
+                        const timeRemaining = info.time_remaining || 0;
 
-                    const displayState =
-                        state === "Printing"
-                            ? `${Math.round(info.time_remaining / 60)}m remain`
-                            : state;
-                    row.innerHTML = `
-          <div class="printer-header">
-            <span class="printer-name">${name}</span>
-            <span class="${stateClass}">${displayState.toUpperCase()}</span>
-          </div>
-          ${progressHtml}
-        `;
-                    container.appendChild(row);
+                        // Top-right: rotate between countdown and ETA
+                        const timeDisplay = printerRotationPhase === 0
+                            ? formatTimeRemaining(timeRemaining)
+                            : "ETA " + formatETA(timeRemaining);
+
+                        // Second line: for Bambu with layer data, rotate between PRINTING and layer info
+                        let statusLine = "PRINTING";
+                        if (info.bambu && info.bambu.total_layer_num > 0) {
+                            statusLine = printerRotationPhase === 0
+                                ? "PRINTING"
+                                : "Layer " + (info.bambu.layer_num || 0) + "/" + info.bambu.total_layer_num;
+                        }
+
+                        const card = document.createElement("div");
+                        card.className = "printer-card active";
+                        card.innerHTML = `
+                            <div class="printer-card-top">
+                                <span class="printer-card-name">${name}</span>
+                                <span class="printer-card-time">${timeDisplay}</span>
+                            </div>
+                            <div class="printer-card-status">${statusLine}</div>
+                            <div class="printer-card-progress">
+                                <div class="printer-card-progress-fill" style="width:${pct}%"></div>
+                                <span class="printer-card-pct">${pct}%</span>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    } else {
+                        // Idle / Finished / Error card
+                        const card = document.createElement("div");
+                        card.className = "printer-card idle" + (isError ? " error" : "") + (isFinished ? " finished" : "");
+                        card.innerHTML = `
+                            <span class="printer-idle-name">${name}</span>
+                            <span class="printer-idle-type">${type}</span>
+                            <span class="printer-idle-status">${status.toUpperCase()}</span>
+                        `;
+                        container.appendChild(card);
+                    }
                 });
             }
+
+            // Rotate printer display every 3.5 seconds
+            setInterval(() => {
+                printerRotationPhase = printerRotationPhase === 0 ? 1 : 0;
+                // Re-render printers with new phase if we have cached data
+                if (cachedPrinterData) renderPrinters(cachedPrinterData);
+            }, 3500);
+
+            let cachedPrinterData = null;
 
             function parseTags(title, description) {
                 const tags = [];

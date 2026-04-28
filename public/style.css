@@ -813,32 +813,102 @@ body.larger-bus-text .future-event-row {
     background: #000;
     border: 3px solid #ff8800;
     padding: 18px;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
 }
 
-.printer-row {
-    padding: 10px 0;
-    border-bottom: 1px solid #222;
+#printer-rows {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
+    flex: 1;
 }
 
-.printer-row:last-child {
-    border-bottom: none;
-}
-
-.printer-header {
+/* Active printer sub-card */
+.printer-card.active {
+    background: #ff8800;
+    color: #000;
+    padding: 12px 14px;
+    border-radius: 4px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     gap: 4px;
 }
 
-.printer-name {
-    font-size: 42px;
+.printer-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.printer-card-name {
+    font-size: 20px;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.printer-card-time {
+    font-family: "Sixtyfour", monospace;
+    font-size: 16px;
+    font-weight: 400;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.printer-card-status {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
+}
+
+.printer-card-progress {
+    height: 14px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 2px;
+}
+
+.printer-card-progress-fill {
+    height: 100%;
+    background: #000;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+.printer-card-pct {
+    position: absolute;
+    right: 6px;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: #ff8800;
+}
+
+/* Idle / Finished / Error printer row */
+.printer-card.idle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #222;
+}
+
+.printer-card.idle:last-child {
+    border-bottom: none;
+}
+
+.printer-idle-name {
+    font-size: 16px;
     font-weight: 700;
     color: #fff;
     overflow: hidden;
@@ -846,31 +916,27 @@ body.larger-bus-text .future-event-row {
     white-space: nowrap;
 }
 
-.printer-state {
-    font-size: 36px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: #fff;
+.printer-idle-type {
+    font-size: 13px;
+    color: #666;
     flex-shrink: 0;
 }
 
-.printer-state.printing {
+.printer-idle-status {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #666;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.printer-card.error .printer-idle-status {
+    color: #ff3333;
+}
+
+.printer-card.finished .printer-idle-status {
     color: #ff8800;
-    animation: pulse 1.5s ease-in-out infinite;
-}
-
-.printer-progress-bar {
-    height: 6px;
-    background: #222;
-    border-radius: 3px;
-    overflow: hidden;
-}
-
-.printer-progress-fill {
-    height: 100%;
-    background: #ff8800;
-    border-radius: 3px;
-    transition: width 0.5s ease;
 }
 
 .info-bar {
