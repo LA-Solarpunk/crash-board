@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const fetch = require("node-fetch");
-const { google } = require("googleapis");
 const path = require("path");
 const fs = require("fs");
 
@@ -587,7 +586,7 @@ async function fetchPrinterData() {
 
   try {
     const resp = await fetch("http://archlinux:3001/");
-    if (!resp.ok) {
+      if (!resp.ok) {
       console.error("printer api error:", resp.status);
       return cachedData.printers.data;
     }

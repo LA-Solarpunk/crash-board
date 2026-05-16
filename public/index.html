@@ -12,7 +12,7 @@
         />
         <link rel="stylesheet" href="style.css" />
     </head>
-    <body class="next-bus-highlight-enabled">
+    <body>
         <div class="top-row">
             <div class="events-grid" id="events-grid"></div>
             <div class="card card-printers" id="printers-card">
@@ -22,7 +22,6 @@
             <div class="card card-buses">
                 <div class="card-title">BUSES</div>
                 <div id="bus-rows"></div>
-                <div class="next-bus-highlight" id="next-bus-highlight"></div>
             </div>
         </div>
 
@@ -216,46 +215,7 @@
                         }
                     }
 
-                    const busRows = document.getElementById("bus-rows");
-                    busRows.innerHTML = "";
-
-                    if (data.buses && data.buses.length > 0) {
-                        cachedBuses = data.buses; // Cache for next bus highlight
-                        updateNextBusHighlight(); // Update highlight immediately
-
-                        data.buses.slice(0, 10).forEach((bus) => {
-                            let timeStr;
-                            if (bus.status === "BRD") {
-                                timeStr = '<span class="boarding">BRD</span>';
-                            } else if (bus.status === "ARR") {
-                                timeStr = '<span class="arriving">ARR</span>';
-                            } else if (bus.minutes > 60) {
-                                // Show absolute arrival time for buses > 60 min away
-                                const arrivalTime = new Date(
-                                    Date.now() + bus.minutes * 60000,
-                                );
-                                timeStr = `<span class="minutes">${formatTime24(arrivalTime)}</span>`;
-                            } else {
-                                timeStr = `<span class="minutes">${bus.minutes}</span>`;
-                            }
-
-                            const row = document.createElement("div");
-                            row.className = "bus-row";
-                            const routeClass = `route route-${bus.route.toLowerCase()}`;
-                            const liveIcon = bus.isLive
-                                ? '<span class="live-icon"></span>'
-                                : "";
-                            row.innerHTML = `
-              <span class="${routeClass}">${bus.route}</span>
-              <span class="destination">${bus.destination}${liveIcon}</span>
-              <span class="time">${timeStr}</span>
-            `;
-                            busRows.appendChild(row);
-                        });
-                    } else {
-                        busRows.innerHTML =
-                            '<div class="no-data">no buses</div>';
-                    }
+                    renderBuses(data.buses || []);
 
                     if (data.spaceStatus) {
                         const statusMain =
@@ -355,10 +315,106 @@
                 }
             }
 
+            // ===== BUS RENDERING =====
+            function isRoute33(r) {
+                return r === "33" || r === "1";
+            }
+            function destMatchesDowntown(d) {
+                const l = (d || "").toLowerCase();
+                return l.includes("downtown") || l.includes("west la") || l.includes("transit center");
+            }
+            function destMatchesSantaMonica(d) {
+                const l = (d || "").toLowerCase();
+                return l.includes("santa monica") || l.includes("venice beach");
+            }
+
+            const BUS_DIRECTIONS = [
+                { label: "33", sublabel: "Downtown",    stop: "Venice / Motor",    match: (b) => isRoute33(b.route) && destMatchesDowntown(b.destination) },
+                { label: "33", sublabel: "Santa Monica", stop: "Venice / Motor",    match: (b) => isRoute33(b.route) && destMatchesSantaMonica(b.destination) },
+                { label: "Rapid 12", sublabel: "UCLA", stop: "Venice / Overland", routeClass: "route-rapid12", match: (b) => b.route === "R12" },
+            ];
+
+            function busClockTime(bus) {
+                return formatTime24(new Date(Date.now() + bus.minutes * 60000));
+            }
+            function isBusClock(bus) {
+                return !bus.status && bus.minutes > 60;
+            }
+
+            // Render the "Next: ..." line. Sixtyfour for the value only.
+            function renderBusNextLine(bus) {
+                if (!bus) {
+                    return `<span class="bus-line-label">Next:</span> <span class="bus-num bus-num-none">—</span>`;
+                }
+                if (bus.status === "BRD") {
+                    return `<span class="bus-line-label">Next:</span> <span class="bus-num bus-num-now">BOARDING</span>`;
+                }
+                if (bus.status === "ARR") {
+                    return `<span class="bus-line-label">Next:</span> <span class="bus-num bus-num-now">ARRIVING</span>`;
+                }
+                if (isBusClock(bus)) {
+                    return `<span class="bus-line-label">Next:</span> <span class="bus-num">${busClockTime(bus)}</span>`;
+                }
+                return `<span class="bus-line-label">Next:</span> <span class="bus-num">${bus.minutes}</span> <span class="bus-line-label">minutes</span>`;
+            }
+
+            // Render the "Following: <a>, <b> min" line. Suffix dropped if any clock time present.
+            function renderBusFollowingLine(buses) {
+                if (!buses.length) return "";
+                const parts = buses.map((b) => {
+                    if (b.status === "BRD") return `<span class="bus-num bus-num-now">BRD</span>`;
+                    if (b.status === "ARR") return `<span class="bus-num bus-num-now">ARR</span>`;
+                    if (isBusClock(b)) return `<span class="bus-num">${busClockTime(b)}</span>`;
+                    return `<span class="bus-num">${b.minutes}</span>`;
+                });
+                const anyClock = buses.some(isBusClock);
+                const allStatus = buses.every((b) => b.status === "BRD" || b.status === "ARR");
+                const suffix = anyClock || allStatus ? "" : ` <span class="bus-line-label">min</span>`;
+                const sep = `<span class="bus-line-label">, </span>`;
+                return `<div class="bus-line bus-following"><span class="bus-line-label">Following:</span> ${parts.join(sep)}${suffix}</div>`;
+            }
+
+            function renderBuses(buses) {
+                const container = document.getElementById("bus-rows");
+                container.innerHTML = "";
+
+                BUS_DIRECTIONS.forEach((dir) => {
+                    const matches = (buses || [])
+                        .filter(dir.match)
+                        .sort((a, b) => (a.minutes || 0) - (b.minutes || 0));
+
+                    const next = matches[0];
+                    const following = matches.slice(1, 3);
+
+                    const card = document.createElement("div");
+                    card.className = "bus-card";
+                    const routeCls = "bus-card-route" + (dir.routeClass ? " " + dir.routeClass : "");
+                    card.innerHTML = `
+                        <div class="bus-card-head">
+                            <div class="${routeCls}">${dir.label}</div>
+                            <div class="bus-card-sub">${dir.sublabel}</div>
+                            <div class="bus-card-stop">${dir.stop}</div>
+                        </div>
+                        <div class="bus-line bus-next">${renderBusNextLine(next)}</div>
+                        ${renderBusFollowingLine(following)}
+                    `;
+                    container.appendChild(card);
+                });
+            }
+
             // Printer rotation state
             let printerRotationPhase = 0; // toggles 0/1 every few seconds
 
-            function getPrinterType(info) {
+            // Hardcoded printer models (API doesn't expose a model field)
+            const PRINTER_MODELS = {
+                Atlas: "Prusa MK4 (Input Shaper)",
+                Glados: "Bambu P1S",
+                Prometheus: "Prusa XL (5-tool)",
+                Wheatley: "Bambu P1S + AMS 2 Pro",
+            };
+
+            function getPrinterType(name, info) {
+                if (PRINTER_MODELS[name]) return PRINTER_MODELS[name];
                 if (info.prusa) return "Prusa";
                 if (info.bambu) return "Bambu";
                 return "";
@@ -399,53 +455,85 @@
 
                 entries.forEach(([name, info]) => {
                     const status = info.status || "unknown";
-                    const type = getPrinterType(info);
+                    const type = getPrinterType(name, info);
                     const isActive = status === "Printing";
+                    const isAttention = status === "Attention";
                     const isError = status.toLowerCase().includes("error");
                     const isFinished = status === "Finished";
+                    const isPrintingLike = isActive || isAttention;
 
-                    if (isActive) {
-                        // Active printer card
-                        const pct = Math.round(info.progress || 0);
+                    let stateClass;
+                    if (isAttention) stateClass = "attention";
+                    else if (isActive) stateClass = "active";
+                    else if (isError) stateClass = "error";
+                    else if (isFinished) stateClass = "finished";
+                    else stateClass = "idle";
+
+                    // Build the status line (third line, under type)
+                    let statusLine;
+                    if (isAttention) {
+                        statusLine = "Attention";
+                    } else if (isActive) {
+                        statusLine = "Printing";
+                        if (info.bambu && info.bambu.total_layer_num > 0 && printerRotationPhase === 1) {
+                            statusLine = "Layer " + (info.bambu.layer_num || 0) + "/" + info.bambu.total_layer_num;
+                        }
+                    } else {
+                        statusLine = status; // server already returns mixed-case (Idle/Finished/Error)
+                    }
+
+                    // Right column: time display for printing/attention cards
+                    let rightCol = "";
+                    if (isPrintingLike) {
                         const timeRemaining = info.time_remaining || 0;
-
-                        // Top-right: rotate between countdown and ETA
                         const timeDisplay = printerRotationPhase === 0
                             ? formatTimeRemaining(timeRemaining)
                             : "ETA " + formatETA(timeRemaining);
+                        rightCol = `<div class="printer-card-time" data-marquee><span>${timeDisplay}</span></div>`;
+                    }
 
-                        // Second line: for Bambu with layer data, rotate between PRINTING and layer info
-                        let statusLine = "PRINTING";
-                        if (info.bambu && info.bambu.total_layer_num > 0) {
-                            statusLine = printerRotationPhase === 0
-                                ? "PRINTING"
-                                : "Layer " + (info.bambu.layer_num || 0) + "/" + info.bambu.total_layer_num;
-                        }
-
-                        const card = document.createElement("div");
-                        card.className = "printer-card active";
-                        card.innerHTML = `
-                            <div class="printer-card-top">
-                                <span class="printer-card-name">${name}</span>
-                                <span class="printer-card-time">${timeDisplay}</span>
-                            </div>
-                            <div class="printer-card-status">${statusLine}</div>
+                    // Progress bar only when printing/attention
+                    let progressHtml = "";
+                    if (isPrintingLike) {
+                        const pct = Math.round(info.progress || 0);
+                        progressHtml = `
                             <div class="printer-card-progress">
                                 <div class="printer-card-progress-fill" style="width:${pct}%"></div>
                                 <span class="printer-card-pct">${pct}%</span>
                             </div>
                         `;
-                        container.appendChild(card);
+                    }
+
+                    const card = document.createElement("div");
+                    card.className = "printer-card " + stateClass;
+                    card.innerHTML = `
+                        <div class="printer-card-top">
+                            <div class="printer-card-heading">
+                                <div class="printer-card-name" data-marquee><span>${name}</span></div>
+                                <div class="printer-card-type" data-marquee><span>${type}</span></div>
+                                <div class="printer-card-status" data-marquee><span>${statusLine}</span></div>
+                            </div>
+                            ${rightCol}
+                        </div>
+                        ${progressHtml}
+                    `;
+                    container.appendChild(card);
+                });
+
+                applyMarquees(container);
+            }
+
+            function applyMarquees(scope) {
+                scope.querySelectorAll("[data-marquee]").forEach((el) => {
+                    const inner = el.firstElementChild;
+                    if (!inner) return;
+                    const overflow = inner.scrollWidth - el.clientWidth;
+                    if (overflow > 2) {
+                        el.style.setProperty("--marquee-distance", overflow + "px");
+                        el.classList.add("marquee-on");
                     } else {
-                        // Idle / Finished / Error card
-                        const card = document.createElement("div");
-                        card.className = "printer-card idle" + (isError ? " error" : "") + (isFinished ? " finished" : "");
-                        card.innerHTML = `
-                            <span class="printer-idle-name">${name}</span>
-                            <span class="printer-idle-type">${type}</span>
-                            <span class="printer-idle-status">${status.toUpperCase()}</span>
-                        `;
-                        container.appendChild(card);
+                        el.classList.remove("marquee-on");
+                        el.style.removeProperty("--marquee-distance");
                     }
                 });
             }
@@ -626,47 +714,10 @@
                 list.style.transform = `translateY(-${futureEventsScrollIndex * rowHeight}px)`;
             }
 
-            // Next bus highlight rotation
-            let nextBusIndex = 0;
-            let cachedBuses = [];
-
-            function updateNextBusHighlight() {
-                if (cachedBuses.length === 0) return;
-
-                const highlight = document.getElementById("next-bus-highlight");
-                const bus = cachedBuses[nextBusIndex];
-
-                let timeText;
-                if (bus.status === "BRD") {
-                    timeText = "BOARDING";
-                } else if (bus.status === "ARR") {
-                    timeText = "ARRIVING";
-                } else if (bus.minutes > 60) {
-                    const arrivalTime = new Date(
-                        Date.now() + bus.minutes * 60000,
-                    );
-                    timeText = "at " + formatTime24(arrivalTime);
-                } else {
-                    timeText = `${bus.minutes} min`;
-                }
-
-                highlight.innerHTML = `
-        <div class="route-badge">${bus.route}</div>
-        <div class="destination-text">TO ${bus.destination.toUpperCase()}</div>
-        <div class="time-text">${timeText}</div>
-      `;
-
-                nextBusIndex =
-                    (nextBusIndex + 1) % Math.min(3, cachedBuses.length);
-            }
-
             // Initialize everything
             function init() {
                 // Auto-scroll future events every 5 seconds
                 setInterval(scrollFutureEvents, 5000);
-
-                // Rotate next bus highlight every 4 seconds
-                setInterval(updateNextBusHighlight, 4000);
 
                 setInterval(refreshData, 30000);
                 refreshData();
