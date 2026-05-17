@@ -469,35 +469,25 @@
                     else if (isFinished) stateClass = "finished";
                     else stateClass = "idle";
 
-                    // Build the status line (third line, under type)
-                    // For active printers: orange fill implies "printing", so use the
-                    // status line for the actually-useful info (ETA + time left + layer).
-                    let statusLine;
-                    if (isAttention) {
-                        statusLine = "Attention";
-                    } else if (isActive) {
-                        const timeRemaining = info.time_remaining || 0;
-                        const parts = [
-                            "ETA " + formatETA(timeRemaining),
-                            formatTimeRemaining(timeRemaining) + " left",
-                        ];
-                        if (info.bambu && info.bambu.total_layer_num > 0) {
-                            parts.push("Layer " + (info.bambu.layer_num || 0) + "/" + info.bambu.total_layer_num);
-                        }
-                        statusLine = parts.join(" · ");
-                    } else {
+                    // Status line (third line under model). Active printers show
+                    // the big rotating time block in its own row instead; attention
+                    // printers also drop the time because the ATTENTION callout
+                    // matters more than ETA. So we only render this line for
+                    // idle / finished / error.
+                    let statusLine = "";
+                    if (!isActive && !isAttention) {
                         statusLine = status; // server already returns mixed-case (Idle/Finished/Error)
                     }
 
-                    // Right column: time display only for attention cards (active embeds
-                    // its time info into the status line so the heading gets full width).
-                    let rightCol = "";
-                    if (isAttention) {
+                    // Big rotating time block (active only): switch every 5s
+                    // between "ETA HH:MM" and "Xh Ym LEFT" in Sixtyfour.
+                    let bigTimeHtml = "";
+                    if (isActive) {
                         const timeRemaining = info.time_remaining || 0;
                         const timeDisplay = printerRotationPhase === 0
-                            ? formatTimeRemaining(timeRemaining)
-                            : "ETA " + formatETA(timeRemaining);
-                        rightCol = `<div class="printer-card-time" data-marquee><span>${timeDisplay}</span></div>`;
+                            ? "ETA " + formatETA(timeRemaining)
+                            : formatTimeRemaining(timeRemaining) + " LEFT";
+                        bigTimeHtml = `<div class="printer-card-bigtime">${timeDisplay}</div>`;
                     }
 
                     // Progress bar only when printing/attention
@@ -512,17 +502,27 @@
                         `;
                     }
 
+                    // Attention printers wrap the name in a highlight span so we
+                    // can alternate orange/white background via CSS animation.
+                    const nameHtml = isAttention
+                        ? `<span class="printer-attention-flash">${name}</span>`
+                        : name;
+
+                    const statusHtml = statusLine
+                        ? `<div class="printer-card-status" data-marquee><span>${statusLine}</span></div>`
+                        : "";
+
                     const card = document.createElement("div");
                     card.className = "printer-card " + stateClass;
                     card.innerHTML = `
                         <div class="printer-card-top">
                             <div class="printer-card-heading">
-                                <div class="printer-card-name" data-marquee><span>${name}</span></div>
+                                <div class="printer-card-name" data-marquee><span>${nameHtml}</span></div>
                                 <div class="printer-card-type" data-marquee><span>${type}</span></div>
-                                <div class="printer-card-status" data-marquee><span>${statusLine}</span></div>
+                                ${statusHtml}
                             </div>
-                            ${rightCol}
                         </div>
+                        ${bigTimeHtml}
                         ${progressHtml}
                     `;
                     container.appendChild(card);
@@ -546,12 +546,12 @@
                 });
             }
 
-            // Rotate printer display every 3.5 seconds
+            // Rotate printer display every 5 seconds
             setInterval(() => {
                 printerRotationPhase = printerRotationPhase === 0 ? 1 : 0;
                 // Re-render printers with new phase if we have cached data
                 if (cachedPrinterData) renderPrinters(cachedPrinterData);
-            }, 3500);
+            }, 5000);
 
             let cachedPrinterData = null;
 

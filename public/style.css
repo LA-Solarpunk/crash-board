@@ -252,6 +252,16 @@ body {
     border-bottom: 2px solid #ff8800;
 }
 
+/* Printer card title is bigger (matches the calendar event-date scale) and
+   drops the underline rule — the orange band on the first active card already
+   provides a visual divider. */
+.card-printers .card-title {
+    font-size: 22px;
+    margin-bottom: 8px;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
 .bus-card {
     flex: 1 1 0;
     min-height: 100px;
@@ -807,11 +817,12 @@ body.larger-bus-text .future-event-row {
 
 /* Active = orange fill, black text (calendar-live parity).
    Bleeds to the parent card's edges (parent padding is 18px) with no rounded
-   corners so the fill reads as a full-width band. */
+   corners so the fill reads as a full-width band. Extra top padding nudges
+   content down inside the orange. */
 .printer-card.active {
     background: #ff8800;
     color: #000;
-    padding: 14px 18px;
+    padding: 26px 18px 14px;
     margin: 0 -18px;
     border-radius: 0;
     border-bottom: none;
@@ -871,11 +882,6 @@ body.larger-bus-text .future-event-row {
     white-space: nowrap;
 }
 
-.printer-card-time {
-    overflow: hidden;
-    white-space: nowrap;
-}
-
 /* Marquee animation: applied via JS when content overflows its container */
 [data-marquee] > span {
     display: inline-block;
@@ -889,36 +895,34 @@ body.larger-bus-text .future-event-row {
     90%, 100% { transform: translateX(0); }
 }
 
-.printer-card.active .printer-card-status {
-    color: #000;
-    opacity: 0.7;
-}
-
 .printer-card.finished .printer-card-status {
     color: #ff8800;
 }
 
-.printer-card.attention .printer-card-status {
-    color: #ff8800;
-    animation: printer-attention-fade 1.4s ease-in-out infinite;
-}
-
-@keyframes printer-attention-fade {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0.3; }
-}
-
-.printer-card-time {
+/* Big rotating ETA / time-left display for active printers — Sixtyfour
+   digital style, black-on-orange to match the active-card fill. */
+.printer-card-bigtime {
     font-family: "Sixtyfour", monospace;
-    font-size: 24px;
+    font-size: 34px;
     font-weight: 400;
-    flex-shrink: 0;
-    margin-left: 8px;
-    color: #ff8800;
+    color: #000;
+    line-height: 1;
+    margin-top: 12px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
-.printer-card.active .printer-card-time {
+/* Attention: alternate orange/white background under the printer name with
+   black text so it pulses as a high-priority callout. */
+.printer-attention-flash {
+    display: inline-block;
+    padding: 2px 10px;
     color: #000;
+    animation: printer-attention-flash 1.2s steps(2, jump-none) infinite;
+}
+@keyframes printer-attention-flash {
+    0%, 49.99% { background: #ff8800; }
+    50%, 100%  { background: #fff; }
 }
 
 .printer-card-progress {
