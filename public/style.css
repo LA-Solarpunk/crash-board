@@ -912,14 +912,20 @@ body.larger-bus-text .future-event-row {
 }
 
 .printer-card.attention .printer-card-bigtime {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 28px;
+    font-weight: 700;
     color: #ff8800;
+    letter-spacing: 0.02em;
+    line-height: 1;
 }
 
 /* Attention: alternate orange/white background under the printer name with
    black text so it pulses as a high-priority callout. */
 .printer-attention-flash {
     display: inline-block;
-    padding: 2px 10px;
+    padding: 6px 12px 4px;
+    line-height: 1;
     color: #000;
     animation: printer-attention-flash 1.6s ease-in-out infinite;
 }
