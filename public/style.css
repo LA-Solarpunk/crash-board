@@ -904,12 +904,11 @@ body.larger-bus-text .future-event-row {
    digital style, black-on-orange to match the active-card fill. */
 .printer-card-bigtime {
     font-family: "Sixtyfour", monospace;
-    font-size: 28px;
+    font-size: 20px;
     font-weight: 400;
     color: #000;
-    line-height: 1;
+    line-height: 1.4;
     white-space: nowrap;
-    overflow: hidden;
 }
 
 /* Attention: alternate orange/white background under the printer name with
