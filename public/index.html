@@ -83,6 +83,18 @@
             setInterval(updateClock, 1000);
             updateClock();
 
+            // Hide cursor after a few seconds of mouse inactivity (kiosk).
+            let cursorHideTimer;
+            function nudgeCursor() {
+                document.body.classList.remove("cursor-hidden");
+                clearTimeout(cursorHideTimer);
+                cursorHideTimer = setTimeout(() => {
+                    document.body.classList.add("cursor-hidden");
+                }, 3000);
+            }
+            document.addEventListener("mousemove", nudgeCursor);
+            nudgeCursor();
+
             function stripHtml(text) {
                 // replace <br> tags with newlines first
                 text = text.replace(/<br\s*\/?>/gi, "\n");

@@ -11,6 +11,11 @@ body {
     overflow: hidden;
 }
 
+body.cursor-hidden,
+body.cursor-hidden * {
+    cursor: none !important;
+}
+
 .top-row {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
