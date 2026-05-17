@@ -470,21 +470,29 @@
                     else stateClass = "idle";
 
                     // Build the status line (third line, under type)
+                    // For active printers: orange fill implies "printing", so use the
+                    // status line for the actually-useful info (ETA + time left + layer).
                     let statusLine;
                     if (isAttention) {
                         statusLine = "Attention";
                     } else if (isActive) {
-                        statusLine = "Printing";
-                        if (info.bambu && info.bambu.total_layer_num > 0 && printerRotationPhase === 1) {
-                            statusLine = "Layer " + (info.bambu.layer_num || 0) + "/" + info.bambu.total_layer_num;
+                        const timeRemaining = info.time_remaining || 0;
+                        const parts = [
+                            "ETA " + formatETA(timeRemaining),
+                            formatTimeRemaining(timeRemaining) + " left",
+                        ];
+                        if (info.bambu && info.bambu.total_layer_num > 0) {
+                            parts.push("Layer " + (info.bambu.layer_num || 0) + "/" + info.bambu.total_layer_num);
                         }
+                        statusLine = parts.join(" · ");
                     } else {
                         statusLine = status; // server already returns mixed-case (Idle/Finished/Error)
                     }
 
-                    // Right column: time display for printing/attention cards
+                    // Right column: time display only for attention cards (active embeds
+                    // its time info into the status line so the heading gets full width).
                     let rightCol = "";
-                    if (isPrintingLike) {
+                    if (isAttention) {
                         const timeRemaining = info.time_remaining || 0;
                         const timeDisplay = printerRotationPhase === 0
                             ? formatTimeRemaining(timeRemaining)

@@ -805,12 +805,15 @@ body.larger-bus-text .future-event-row {
     border-bottom: none;
 }
 
-/* Active = orange fill, black text (calendar-live parity) */
+/* Active = orange fill, black text (calendar-live parity).
+   Bleeds to the parent card's edges (parent padding is 18px) with no rounded
+   corners so the fill reads as a full-width band. */
 .printer-card.active {
     background: #ff8800;
     color: #000;
-    padding: 14px 16px;
-    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 0 -18px;
+    border-radius: 0;
     border-bottom: none;
 }
 
@@ -848,7 +851,7 @@ body.larger-bus-text .future-event-row {
 
 .printer-card-type {
     font-size: 20px;
-    color: #888;
+    color: #bbb;
     font-weight: 500;
     overflow: hidden;
     white-space: nowrap;
