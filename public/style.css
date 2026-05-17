@@ -857,8 +857,21 @@ body.larger-bus-text .future-event-row {
     color: #000;
 }
 
-.printer-card.attention .printer-card-name {
-    color: #ff8800;
+/* Attention cards mirror the active full-width fill but pulse the
+   background between orange and white; all text turns black so it stays
+   legible across both fill colors. */
+.printer-card.attention {
+    color: #000;
+    padding: 18px 18px 16px;
+    margin: 0 -18px;
+    border-radius: 0;
+    border-bottom: none;
+    justify-content: flex-start;
+    animation: printer-attention-pulse 2.4s ease-in-out infinite;
+}
+@keyframes printer-attention-pulse {
+    0%, 100% { background: #ff8800; }
+    50%      { background: #fff; }
 }
 
 .printer-card-type {
@@ -869,7 +882,8 @@ body.larger-bus-text .future-event-row {
     white-space: nowrap;
 }
 
-.printer-card.active .printer-card-type {
+.printer-card.active .printer-card-type,
+.printer-card.attention .printer-card-type {
     color: rgba(0, 0, 0, 0.6);
 }
 
@@ -915,23 +929,9 @@ body.larger-bus-text .future-event-row {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 28px;
     font-weight: 700;
-    color: #ff8800;
+    color: #000;
     letter-spacing: 0.02em;
     line-height: 1;
-}
-
-/* Attention: alternate orange/white background under the printer name with
-   black text so it pulses as a high-priority callout. */
-.printer-attention-flash {
-    display: inline-block;
-    padding: 6px 12px 4px;
-    line-height: 1;
-    color: #000;
-    animation: printer-attention-flash 1.6s ease-in-out infinite;
-}
-@keyframes printer-attention-flash {
-    0%, 100% { background: #ff8800; }
-    50%      { background: #fff; }
 }
 
 .info-bar {

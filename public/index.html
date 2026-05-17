@@ -494,12 +494,6 @@
                         bigTimeHtml = `<div class="printer-card-bigtime">Attention</div>`;
                     }
 
-                    // Attention printers wrap the name in a highlight span so we
-                    // can alternate orange/white background via CSS animation.
-                    const nameHtml = isAttention
-                        ? `<span class="printer-attention-flash">${name}</span>`
-                        : name;
-
                     const statusHtml = statusLine
                         ? `<div class="printer-card-status" data-marquee><span>${statusLine}</span></div>`
                         : "";
@@ -509,7 +503,7 @@
                     card.innerHTML = `
                         <div class="printer-card-top">
                             <div class="printer-card-heading">
-                                <div class="printer-card-name" data-marquee><span>${nameHtml}</span></div>
+                                <div class="printer-card-name" data-marquee><span>${name}</span></div>
                                 <div class="printer-card-type" data-marquee><span>${type}</span></div>
                                 ${statusHtml}
                             </div>
