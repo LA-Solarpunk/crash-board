@@ -853,7 +853,8 @@ body.larger-bus-text .future-event-row {
     color: #fff;
 }
 
-.printer-card.active .printer-card-name {
+.printer-card.active .printer-card-name,
+.printer-card.attention .printer-card-name {
     color: #000;
 }
 
