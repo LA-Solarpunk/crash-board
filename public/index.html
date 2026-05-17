@@ -479,8 +479,10 @@
                         statusLine = status; // server already returns mixed-case (Idle/Finished/Error)
                     }
 
-                    // Big rotating time block (active only): switch every 5s
-                    // between "ETA HH:MM" and "Xh Ym LEFT" in Sixtyfour.
+                    // Big bottom line in Sixtyfour. Active rotates ETA/LEFT
+                    // every 5s; attention shows the word "Attention" in place
+                    // of ETA so the flashing name + this line both carry the
+                    // alert.
                     let bigTimeHtml = "";
                     if (isActive) {
                         const timeRemaining = info.time_remaining || 0;
@@ -488,18 +490,8 @@
                             ? "ETA " + formatETA(timeRemaining)
                             : formatTimeRemaining(timeRemaining) + " LEFT";
                         bigTimeHtml = `<div class="printer-card-bigtime">${timeDisplay}</div>`;
-                    }
-
-                    // Progress bar only when printing/attention
-                    let progressHtml = "";
-                    if (isPrintingLike) {
-                        const pct = Math.round(info.progress || 0);
-                        progressHtml = `
-                            <div class="printer-card-progress">
-                                <div class="printer-card-progress-fill" style="width:${pct}%"></div>
-                                <span class="printer-card-pct">${pct}%</span>
-                            </div>
-                        `;
+                    } else if (isAttention) {
+                        bigTimeHtml = `<div class="printer-card-bigtime">Attention</div>`;
                     }
 
                     // Attention printers wrap the name in a highlight span so we
@@ -523,7 +515,6 @@
                             </div>
                         </div>
                         ${bigTimeHtml}
-                        ${progressHtml}
                     `;
                     container.appendChild(card);
                 });
