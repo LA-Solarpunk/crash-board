@@ -1,157 +1,92 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code when working in this repo. README.md is the human-written
+overview; keep that voice when touching docs. This file is the operational detail.
 
-## Project Overview
+## What this is
 
-Real-time transit + calendar + status display for CRASH Space. A fullscreen departure board showing upcoming events, bus arrivals, space open/closed status, and weather in an orange/black/white aesthetic.
+Fullscreen kiosk board for CRASH Space: next events, LA Metro / Big Blue Bus
+arrivals, 3D printer status, weather, and space open/closed. Orange-on-black,
+no user interaction, small screen viewed from across a room.
 
-## Running the Project
+## Running it
 
-### Development
 ```bash
 npm install
-node server.js
+cp .env.example .env   # fill in keys
+node server.js         # http://localhost:3000
 ```
 
-Server runs on port 3000 by default (configurable via `PORT` env var).
-Access at `http://localhost:3000`
+No build step. Env vars the code reads (everything except the first three has a default):
 
-### Docker
-```bash
-docker-compose up -d
-```
+- `SWIFTLY_API_KEY` - live LA Metro data. Blank = timetable-only mode, fine for dev.
+- `GOOGLE_CALENDAR_ID`, `GOOGLE_API_KEY` - public calendar + key with Calendar API enabled.
+- `LOCATION_LAT`, `LOCATION_LON` - for NWS weather. Default is CRASH Space (Venice & Motor).
+- `SPACE_STATUS_URL` - sign page to scrape. Default crashspacela.com/sign.
+- `PRINTER_API_URL` - printer status service. Default `http://archlinux:3001/`, which only
+  resolves on the production box. Set it to the LAN address when testing from a laptop
+  instead of editing server.js.
+- `PORT` - default 3000.
 
-## Environment Configuration
+## Layout
 
-Copy `.env.example` to `.env` and configure:
+- `server.js` - the whole backend. Express, serves `public/`, two JSON endpoints.
+- `public/index.html`, `public/script.js`, `public/style.css` - the whole frontend. Vanilla JS.
+- `schedules/*.json` - static timetables (Metro 33, BBB Rapid 12, Culver City 1 & 3) split by
+  weekday/saturday/sunday. Only 33 and R12 are loaded. Metro revises schedules a couple
+  of times a year; these go stale.
+- `schedules/bus_tracker_v3.ino`, `schedules.h` - the older ESP32 VFD tracker. `/api/buses`
+  exists for it.
 
-**Required:**
-- `SWIFTLY_API_KEY` - LA Metro GTFS-RT feed access (api.goswift.ly)
-- `GOOGLE_CALENDAR_ID` - Calendar to pull events from
-- `GOOGLE_API_KEY` - Google Calendar API access
+## How the backend behaves
 
-**Optional:**
-- `WEATHER_API_KEY` - OpenWeatherMap API key
-- `LOCATION_LAT/LON` - Location coordinates (defaults to CRASH Space)
-- `SPACE_STATUS_URL` - Space status endpoint
-- `PORT` - Server port (default: 3000)
+- Every source is fetched server-side and cached in memory with its own TTL: buses and
+  printers 30 s, space status 1 min, calendar 5 min, weather 10 min. A timer runs every
+  minute and each fetcher decides whether it is stale. Requests also check on demand.
+- On any fetch error a source returns its last good data, so the board goes stale rather
+  than blank. Exception: buses fall back to the timetable when Swiftly is unavailable
+  (`useScheduleFallback`), because frozen live minutes are worse than a schedule.
+- Buses: the full Swiftly GTFS-RT trip-updates feed (~4.7 MB) is scanned for stop IDs
+  6939 and 15292 (Venice & Motor). All routes at those stops are kept. Live departures are
+  merged with the timetable; a scheduled entry is dropped when a live one matches on route,
+  destination, and time within 5 minutes. Each departure carries `isLive`.
+- Weather: NWS, no key. Gridpoint resolved once per process, then hourly + daily forecast.
+- Space status: HTML scrape of the sign page keyed on table bgcolor. Fragile. The sign has
+  been stale since mid-2026, so the board shows closed.
+- Printers: passthrough of an external service's JSON, keyed by printer name with
+  `status`, `time_remaining` (seconds), and `prusa`/`bambu` flags.
+- Endpoints: `/api/all` (everything + unix timestamp, polled by the page every 30 s) and
+  `/api/buses` (departures only).
 
-## Architecture
+## Frontend notes
 
-### Server-Side (server.js)
+- Polls `/api/all` every 30 s. Clock ticks locally. Future-events list scrolls every 5 s.
+  Active printer cards alternate ETA / time-left every 5 s. Cursor hides after 3 s idle.
+- Bus card is three fixed slots: 33 Downtown, 33 Santa Monica, Rapid 12 UCLA.
+- Event tags come from `[brackets]` / `(parens)` in the title and "open to the public" in
+  the description. Live events invert to orange. Cancelled events grey out.
+- Printer model names are hardcoded in `script.js` (`PRINTER_MODELS`).
+- Fonts: Sixtyfour for clocks/ETAs, Helvetica Neue for body. Primary color `#ff8800`.
 
-**Data Fetching Pattern:**
-- All external APIs are called server-side with caching
-- Cache refresh intervals prevent quota exhaustion:
-  - Buses: 30 seconds (GTFS-RT feed)
-  - Calendar: 5 minutes (Google Calendar API)
-  - Weather: 10 minutes (OpenWeatherMap)
-  - Space Status: 1 minute (web scraping)
-- Background refresh runs every minute, respects individual cache TTLs
-- Returns stale data on API errors to maintain display uptime
+## Conventions
 
-**Bus Data Flow:**
-- Fetches entire 4.7MB LA Metro GTFS-RT feed from Swiftly
-- Server-side parsing filters to specific stops (`ourStops` array in server.js:73)
-- Currently configured for Venice & Motor stops: 6939 (eastbound), 15292 (westbound)
-- Route filtering logic at server.js:86 (currently all routes shown)
-- Calculates arrival states: BRD (<1 min), ARR (1-2 min), or minutes remaining
-- Sorts by arrival time, returns top 20 departures
+- Match the file's existing style: 2-space indent in `server.js`, 4-space in `script.js`,
+  double quotes, trailing commas. No framework, no bundler, no TypeScript.
+- Times are 24-hour everywhere.
+- Never commit `.env`. Never hardcode a LAN IP; add an env var with a sane default instead.
+- Frontend changes need the kiosk page reloaded (F5 on the box). Backend changes need a
+  service restart. Nothing needs a build.
 
-**API Endpoints:**
-- `/api/buses` - Bus departures only (for ESP32 VFD compatibility)
-- `/api/all` - Combined data payload for web dashboard
+## Deploy
 
-**Space Status Parsing:**
-- Scrapes crashspacela.com/sign HTML
-- Looks for specific bgcolor patterns to determine open/closed state
-- Extracts message and last update timestamp via regex
+- Production: systemd `crash-board.service` runs `node server.js` from `/opt/crash-board`
+  as user `crash`, with Firefox in kiosk mode on the same machine.
+- Git remotes on the maintainer laptop: `origin` is a bare repo on the production box
+  (deploy target), `github` is the public repo `LA-Solarpunk/crash-board`. Branch is `main`.
+- Deploy a change: push `main` to both remotes, `git pull` in `/opt/crash-board`, then
+  restart the service. Logs: `journalctl -u crash-board -f`.
 
-### Frontend (public/)
+## Quotas
 
-**Single-Page Architecture:**
-- Pure JavaScript (no frameworks)
-- Polls `/api/all` every 30 seconds
-- Clock updates every second locally
-- Grid-based layout using CSS Grid
-
-**Display Layout:**
-- **Top Row**: 6-column grid
-  - First 5 event cards (expandable grid items)
-  - 1 buses card (fixed width)
-- **Bottom Row**: 2-column grid
-  - Future events list (condensed, next 10 events after the first 5)
-  - Space status card
-- **Info Bar**: Fixed bottom bar with date and clock
-
-**Event Card States:**
-- **Live Events**: Orange background when current time between start/end
-- **Next Event**: First upcoming event gets "Next" tag
-- **Cancelled**: Greyed out with CANCELLED badge
-- Tags parsed from title brackets/parens: [HYBRID], (Members Only), "open to the public" in description
-
-**Visual Styling:**
-- Primary: Orange (#ff8800)
-- Background: Black (#000)
-- Text: White (#fff)
-- Fonts:
-  - 'Sixtyfour' for times/clock (7-segment style)
-  - 'Helvetica Neue' for body text
-- Boarding buses pulse orange animation
-
-## Customization Points
-
-### Adding Transit Routes
-Edit `server.js` around line 86 to modify route filtering:
-```javascript
-// Show specific routes only
-const wantedRoutes = ['33', 'R3', '233'];
-const route = routeId.split('-')[0];
-if (!wantedRoutes.includes(route)) continue;
-```
-
-### Adding Bus Stops
-Modify `ourStops` array in `server.js:73`:
-```javascript
-const ourStops = ['6939', '15292', 'YOUR_STOP_ID'];
-```
-
-### Adjusting Refresh Rates
-Edit `REFRESH_INTERVALS` object in `server.js:31-36`
-
-Note: Swiftly free tier = 1500 calls/month. At 30-second refresh during 16-hour operation = ~1920 calls/day. Monitor usage or adjust interval.
-
-## API Quota Considerations
-
-- Swiftly: 1500 calls/month free tier (may need to throttle refresh rate)
-- Google Calendar: 1M requests/day
-- OpenWeatherMap: 1000 calls/day free tier
-
-Server-side caching is critical to staying within quotas.
-
-## Deployment Notes
-
-Production deployment typically uses systemd services:
-- One service for the Node.js server
-- One user service for Firefox kiosk mode
-- See README.md lines 103-174 for full systemd setup
-- Logs viewable via `journalctl -u crash-board -f`
-
-## Key Implementation Details
-
-**HTML Sanitization:**
-- Event descriptions may contain HTML from Google Calendar
-- `stripHtml()` function converts `<br>` to newlines, strips other tags
-- Applied to both title and description fields
-
-**Tag Parsing Logic:**
-- Regex extracts content from brackets `[]` and parentheses `()` in event titles
-- Case-insensitive keyword matching for tag types
-- Tags extend outside card borders using negative margins for visual effect
-- Tags invert colors when event is live (black on orange vs orange on black)
-
-**Time Display:**
-- All times displayed in 24-hour format (en-GB locale)
-- Bus times use Sixtyfour font (7-segment style)
-- Event cards show full date + time range if end time exists
+Swiftly free tier is the only one that matters. Google Calendar and NWS are effectively
+unlimited at this polling rate.
