@@ -19,13 +19,21 @@ let cachedData = {
   printers: { data: {}, lastFetch: 0 },
 };
 
-// config from env
+// config from env (see .env.example). anything with a default here is optional.
+function envNumber(name, fallback) {
+  const value = parseFloat(process.env[name]);
+  return Number.isFinite(value) ? value : fallback;
+}
+
 const SWIFTLY_API_KEY = process.env.SWIFTLY_API_KEY;
-const LOCATION_LAT = parseFloat(process.env.LOCATION_LAT);
-const LOCATION_LON = parseFloat(process.env.LOCATION_LON);
 const GOOGLE_CALENDAR_ID = process.env.GOOGLE_CALENDAR_ID;
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
-const SPACE_STATUS_URL = process.env.SPACE_STATUS_URL;
+// defaults are CRASH Space (Venice & Motor)
+const LOCATION_LAT = envNumber("LOCATION_LAT", 34.019254);
+const LOCATION_LON = envNumber("LOCATION_LON", -118.405231);
+const SPACE_STATUS_URL =
+  process.env.SPACE_STATUS_URL || "https://crashspacela.com/sign/";
+const PRINTER_API_URL = process.env.PRINTER_API_URL || "http://archlinux:3001/";
 
 // refresh intervals (milliseconds)
 const REFRESH_INTERVALS = {
@@ -128,6 +136,23 @@ function getScheduledDepartures() {
   return departures;
 }
 
+// what the bus card shows when there's no live feed: timetable only,
+// soonest first, capped the same as the live path
+function scheduledOnlyDepartures() {
+  return getScheduledDepartures()
+    .sort((a, b) => a.minutes - b.minutes)
+    .slice(0, 20);
+}
+
+// swiftly is down or refusing us: show the timetable rather than freezing the
+// last live result. cached so we retry at the normal cadence, not every request.
+function useScheduleFallback(now) {
+  console.log("swiftly unavailable - falling back to scheduled departures");
+  cachedData.buses.data = scheduledOnlyDepartures();
+  cachedData.buses.lastFetch = now;
+  return cachedData.buses.data;
+}
+
 // ===== TRANSIT API (BBB + Culver City real-time) =====
 // placeholder for future Transit API integration
 // will provide real-time data for R12, CC1, CC3
@@ -157,8 +182,7 @@ async function fetchBusData() {
 
   if (!SWIFTLY_API_KEY) {
     console.log("no swiftly api key - using scheduled departures only");
-    const scheduledDepartures = getScheduledDepartures();
-    cachedData.buses.data = scheduledDepartures.slice(0, 20);
+    cachedData.buses.data = scheduledOnlyDepartures();
     cachedData.buses.lastFetch = now;
     return cachedData.buses.data;
   }
@@ -172,7 +196,7 @@ async function fetchBusData() {
 
     if (!resp.ok) {
       console.error("swiftly api error:", resp.status);
-      return cachedData.buses.data;
+      return useScheduleFallback(now);
     }
 
     const data = await resp.json();
@@ -325,7 +349,7 @@ async function fetchBusData() {
     return cachedData.buses.data;
   } catch (err) {
     console.error("bus fetch error:", err.message);
-    return cachedData.buses.data; // return stale on error
+    return useScheduleFallback(now);
   }
 }
 
@@ -386,19 +410,16 @@ var nwsCache = {
 };
 
 var NWS_HEADERS = {
-  "User-Agent": "(crash-space-board, github.com/lavie/crash-space-board)",
+  "User-Agent": "(crash-board, github.com/LA-Solarpunk/crash-board)",
   Accept: "application/geo+json",
 };
-
-// CRASH Space coordinates
-var NWS_LAT = 34.091254;
-var NWS_LON = -118.405231;
 
 async function resolveNWSGridpoint() {
   if (nwsCache.gridpointResolved) return;
 
   try {
-    var pointsUrl = "https://api.weather.gov/points/" + NWS_LAT + "," + NWS_LON;
+    var pointsUrl =
+      "https://api.weather.gov/points/" + LOCATION_LAT + "," + LOCATION_LON;
     var resp = await fetch(pointsUrl, { headers: NWS_HEADERS });
     if (!resp.ok) {
       console.error("NWS points error:", resp.status);
@@ -410,7 +431,11 @@ async function resolveNWSGridpoint() {
     nwsCache.forecastHourlyUrl = data.properties.forecastHourly;
     nwsCache.gridpointResolved = true;
     console.log(
-      "NWS resolved: gridpoint " +
+      "NWS resolved " +
+        LOCATION_LAT +
+        "," +
+        LOCATION_LON +
+        " -> gridpoint " +
         data.properties.gridId +
         "/" +
         data.properties.gridX +
@@ -509,7 +534,7 @@ async function fetchSpaceStatus() {
   }
 
   try {
-    const resp = await fetch("https://crashspacela.com/sign/");
+    const resp = await fetch(SPACE_STATUS_URL);
 
     if (resp.ok) {
       const html = await resp.text();
@@ -585,8 +610,8 @@ async function fetchPrinterData() {
   }
 
   try {
-    const resp = await fetch("http://archlinux:3001/");
-      if (!resp.ok) {
+    const resp = await fetch(PRINTER_API_URL);
+    if (!resp.ok) {
       console.error("printer api error:", resp.status);
       return cachedData.printers.data;
     }
